@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Victory Car Rental | Curaçao</title>
+  <meta name="description" content="Victory Car Rental in Curaçao. Daily, weekly & monthly rentals. Free airport pickup & drop-off. Delivery anywhere on the island." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500;1,700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="container topbar__inner">
+      <div class="topbar__left" data-i18n="topbar_location">
+        Curaçao, Willemstad • Airport pickup & drop-off
+      </div>
+
+      <div class="topbar__right">
+        <a href="tel:+59996913342">+5999 6913342</a>
+        <span class="dot">•</span>
+        <a href="mailto:victorycarrental@outlook.com">victorycarrental@outlook.com</a>
+        <span class="dot">•</span>
+
+        <a class="social" href="https://instagram.com/victorycarrental" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+            <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm10 2H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm-5 4.5A5.5 5.5 0 1 1 6.5 14 5.5 5.5 0 0 1 12 8.5zm0 2A3.5 3.5 0 1 0 15.5 14 3.5 3.5 0 0 0 12 10.5zM18 6.2a1.1 1.1 0 1 1-1.1 1.1A1.1 1.1 0 0 1 18 6.2z"/>
+          </svg>
+          <span>@victorycarrental</span>
+        </a>
+
+        <a class="social" href="https://facebook.com/victorycarrental" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+            <path d="M13.5 22v-8h2.7l.4-3H13.5V9.1c0-.9.3-1.5 1.6-1.5h1.6V5c-.3 0-1.4-.1-2.7-.1-2.7 0-4.5 1.6-4.5 4.6V11H7v3h2.6v8h3.9z"/>
+          </svg>
+          <span data-i18n="facebook">Facebook</span>
+        </a>
+
+        <div class="lang">
+          <label class="lang__label" data-i18n="language">Language</label>
+          <select id="langSelect" class="lang__select" aria-label="Language switcher">
+            <option value="en">EN</option>
+            <option value="nl">NL</option>
+            <option value="es">ES</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="container header__inner">
+      <a class="brand" href="#">
+        <img class="brand__logo" src="./assets/logo.jpg" alt="Victory Car Rental logo" />
+        <div class="brand__text">
+          <div class="brand__name">Victory Car Rental</div>
+          <div class="brand__tag" data-i18n="brand_tag">Champ in price & service</div>
+        </div>
+      </a>
+
+      <nav class="nav" id="nav">
+        <a href="#fleet" data-i18n="nav_fleet">Fleet</a>
+        <a href="#services" data-i18n="nav_services">Services</a>
+        <a href="#contact" data-i18n="nav_contact">Contact</a>
+        <a class="btn btn--primary" href="#contact" data-i18n="nav_book">Book Now</a>
+      </nav>
+
+      <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" aria-label="Hero banner">
+    <div class="hero__overlay"></div>
+
+    <div class="container hero__inner">
+      <div class="hero__copy">
+        <div class="hero__headlineTag" data-i18n="best_prices">Best prices in town</div>
+        <div class="hero__openTag" data-i18n="open_247">Open 24/7 • No business hours</div>
+
+        <h1 data-i18n="hero_title">Simple, affordable car rentals in Curaçao</h1>
+        <p class="hero__lead" data-i18n="hero_lead">
+          Daily, weekly & monthly rentals. Free airport pickup & drop-off.
+          Delivery anywhere on the island. No credit card required.
+        </p>
+
+        <div class="hero__cta">
+          <a class="btn btn--primary" href="#fleet" data-i18n="hero_cta1">View Cars & Prices</a>
+          <a class="btn btn--outline" href="#contact" data-i18n="hero_cta2">Get a Quote</a>
+        </div>
+
+        <div class="hero__badges">
+          <div class="badge" data-i18n="badge_airport">✅ Airport Pickup</div>
+          <div class="badge" data-i18n="badge_delivery">✅ Delivery Islandwide</div>
+          <div class="badge" data-i18n="badge_insurance">✅ Insurance Options</div>
+        </div>
+
+        <p class="tiny tiny--hero" data-i18n="fx_note">
+          Prices shown in USD and XCG (fixed rate: 1 USD = 1.79 XCG).
+        </p>
+      </div>
+
+      <!-- Quick Quote -->
+      <div class="hero__card card">
+        <h2 data-i18n="qq_title">Quick Quote</h2>
+        <p class="muted" data-i18n="qq_sub">Tell us your dates — we’ll confirm availability fast.</p>
+
+        <form class="form" id="quickQuoteForm">
+          <div class="grid grid--2">
+            <label>
+              <span data-i18n="pickup_date">Pickup date</span>
+              <input type="date" name="pickup_date" required />
+            </label>
+
+            <label>
+              <span data-i18n="return_date">Return date</span>
+              <input type="date" name="return_date" required />
+            </label>
+          </div>
+
+          <label>
+            <span data-i18n="pickup_location">Pickup location</span>
+            <input type="text" name="pickup_location" placeholder="Airport / Willemstad / etc." data-i18n-placeholder="pickup_placeholder" required />
+          </label>
+
+          <label>
+            <span data-i18n="car_type">Car type</span>
+            <select name="car_id" id="quickCarSelect" required></select>
+          </label>
+
+          <div class="actions actions--2">
+            <button class="btn btn--primary btn--block" type="submit" name="channel" value="whatsapp" data-i18n="send_whatsapp">
+              Send via WhatsApp
+            </button>
+            <button class="btn btn--outline btn--block" type="submit" name="channel" value="email" data-i18n="send_email">
+              Send via Email
+            </button>
+          </div>
+
+          <p class="tiny" data-i18n="qq_note">
+            This is a request — we’ll confirm final price & availability with you.
+          </p>
+          <p class="tiny" data-i18n="booking_note">
+            No WhatsApp? Use Email — it works without an account.
+          </p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Fleet -->
+  <section class="section" id="fleet">
+    <div class="container">
+      <div class="section__head">
+        <div>
+          <h2 data-i18n="fleet_title">Our Fleet</h2>
+          <p class="muted" data-i18n="fleet_sub">Starting rates shown below (minimum 3 days).</p>
+        </div>
+
+        <div class="filters">
+          <button class="chip is-active" data-filter="all" data-i18n="filter_all">All</button>
+          <button class="chip" data-filter="mini" data-i18n="filter_mini">Mini</button>
+          <button class="chip" data-filter="compact" data-i18n="filter_compact">Compact</button>
+          <button class="chip" data-filter="compact_suv" data-i18n="filter_compact_suv">Compact SUV</button>
+          <button class="chip" data-filter="seven_seater" data-i18n="filter_7seater">7 Seater</button>
+        </div>
+      </div>
+
+      <div class="fleet" id="fleetGrid"></div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="section section--alt" id="services">
+    <div class="container">
+      <div class="section__head">
+        <div>
+          <h2 data-i18n="services_title">Services</h2>
+          <p class="muted" data-i18n="services_sub">Clear, simple, and convenient.</p>
+        </div>
+      </div>
+
+      <div class="services">
+        <div class="card service">
+          <h3 data-i18n="srv1_title">Rentals</h3>
+          <ul>
+            <li data-i18n="srv1_1">Daily, weekly & monthly rentals</li>
+            <li data-i18n="srv1_2">No credit card required</li>
+            <li data-i18n="srv1_3">Insurance options included</li>
+          </ul>
+        </div>
+
+        <div class="card service">
+          <h3 data-i18n="srv2_title">Pickup & Delivery</h3>
+          <ul>
+            <li data-i18n="srv2_1">Free airport pickup & drop-off</li>
+            <li data-i18n="srv2_2">Delivery anywhere on the island</li>
+            <li data-i18n="srv2_3">Fast and easy process</li>
+          </ul>
+        </div>
+
+        <div class="card service">
+          <h3 data-i18n="srv3_title">Vehicle Features</h3>
+          <ul>
+            <li data-i18n="srv3_1">A/C in all cars</li>
+            <li data-i18n="srv3_2">Bluetooth in all cars</li>
+            <li data-i18n="srv3_3">Automatic transmission (no stick)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="section" id="contact">
+    <div class="container">
+      <div class="section__head">
+        <div>
+          <h2 data-i18n="contact_title">Contact</h2>
+          <p class="muted" data-i18n="contact_sub">Send your dates + preferred car and we’ll confirm availability.</p>
+        </div>
+      </div>
+
+      <div class="contact">
+        <div class="card contact__info">
+          <h3>Victory Car Rental</h3>
+          <p class="muted">Curaçao, Willemstad</p>
+
+          <div class="contact__lines">
+            <a class="contact__line" href="tel:+59996913342">
+              <span data-i18n="phone">Phone</span><strong>+5999 6913342</strong>
+            </a>
+            <a class="contact__line" href="mailto:victorycarrental@outlook.com">
+              <span data-i18n="email">Email</span><strong>victorycarrental@outlook.com</strong>
+            </a>
+
+            <a class="contact__line" href="https://instagram.com/victorycarrental" target="_blank" rel="noopener noreferrer">
+              <span data-i18n="instagram">Instagram</span><strong>@victorycarrental</strong>
+            </a>
+            <a class="contact__line" href="https://facebook.com/victorycarrental" target="_blank" rel="noopener noreferrer">
+              <span data-i18n="facebook">Facebook</span><strong>/victorycarrental</strong>
+            </a>
+          </div>
+
+          <div class="contact__cta">
+            <a class="btn btn--primary btn--block" href="tel:+59996913342" data-i18n="call_now">Call Now</a>
+          </div>
+
+          <p class="tiny" data-i18n="min_days_note">Minimum 3 days on listed offers.</p>
+        </div>
+
+        <div class="card contact__form">
+          <form id="contactForm" class="form">
+            <div class="grid grid--2">
+              <label>
+                <span data-i18n="name">Name</span>
+                <input name="name" required placeholder="Your name" data-i18n-placeholder="name_placeholder" />
+              </label>
+              <label>
+                <span data-i18n="phone">Phone</span>
+                <input name="phone" placeholder="+5999 ..." />
+              </label>
+            </div>
+
+            <div class="grid grid--2">
+              <label>
+                <span data-i18n="pickup_date">Pickup date</span>
+                <input type="date" name="pickup_date" required />
+              </label>
+              <label>
+                <span data-i18n="return_date">Return date</span>
+                <input type="date" name="return_date" required />
+              </label>
+            </div>
+
+            <label>
+              <span data-i18n="preferred_car">Preferred car</span>
+              <select name="car_id" id="contactCarSelect" required></select>
+            </label>
+
+            <label>
+              <span data-i18n="pickup_location">Pickup location</span>
+              <input name="pickup_location" placeholder="Airport / Willemstad / etc." data-i18n-placeholder="pickup_placeholder" required />
+            </label>
+
+            <label>
+              <span data-i18n="message">Message</span>
+              <textarea name="message" rows="4" placeholder="Airport pickup? Delivery address? Child seat?" data-i18n-placeholder="message_placeholder" required></textarea>
+            </label>
+
+            <div class="actions actions--2">
+              <button class="btn btn--primary btn--block" type="submit" name="channel" value="whatsapp" data-i18n="send_whatsapp">
+                Send via WhatsApp
+              </button>
+              <button class="btn btn--outline btn--block" type="submit" name="channel" value="email" data-i18n="send_email">
+                Send via Email
+              </button>
+            </div>
+
+            <p class="tiny" data-i18n="booking_note">
+              No WhatsApp? Use Email — it works without an account.
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Curaçao -->
+  <section class="section section--alt" id="curacao">
+    <div class="container curacao">
+      <div class="curacao__header">
+        <h2 data-i18n="cur_title">About Curaçao</h2>
+        <p class="muted" data-i18n="cur_subline">
+          A little history, a lot of adventure — and beaches you’ll never forget.
+        </p>
+      </div>
+
+      <div class="curacao__layout">
+        <div class="card curacao__story">
+          <div class="curacao__storyOverlay"></div>
+          <div class="curacao__storyInner">
+            <div class="curacao__storyBadge" data-i18n="cur_story_badge">Island story</div>
+            <p class="curacao__storyText" data-i18n="cur_desc"></p>
+          </div>
+        </div>
+
+        <div class="curacao__side">
+          <div class="card curacao__card">
+            <h3 data-i18n="cur_beaches_title">Beautiful beaches</h3>
+            <ul class="curacao__list">
+              <li>Mambo Beach</li>
+              <li>Playa Kenepa Grandi (Grote Knip)</li>
+              <li>Cas Abao Beach</li>
+              <li>Jan Thiel Beach</li>
+              <li>Playa Lagun</li>
+            </ul>
+          </div>
+
+          <div class="card curacao__card">
+            <h3 data-i18n="cur_company_title">Victory Car Rental</h3>
+            <p class="muted" data-i18n="cur_company_desc">
+              Established since 2009 — helping visitors explore the island with comfort and the best prices in town.
+            </p>
+            <a class="btn btn--primary btn--block"
+               href="https://instagram.com/victorycarrental"
+               target="_blank" rel="noopener noreferrer"
+               data-i18n="follow_instagram">
+              Follow us on Instagram
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rental Policies Summary (LAST SECTION) -->
+  <section class="section section--alt" id="policies">
+    <div class="container">
+      <div class="section__head">
+        <div>
+          <h2>Rental Policies (Summary)</h2>
+          <p class="muted">The most important points from our rental agreement.</p>
+        </div>
+      </div>
+
+      <div class="card policy-card">
+        <ul class="policy-list">
+          <li><strong>Driver Requirements:</strong> Drivers must be at least 23 years old with a valid driver’s license. Only drivers listed on the rental agreement may operate the vehicle.</li>
+          <li><strong>Vehicle Use:</strong> Vehicles may only be used on Curaçao. No racing, off-road driving, or misuse. Smoking is not allowed.</li>
+          <li><strong>Fuel Policy:</strong> Vehicles must be returned with the same fuel level as received. Missing fuel will be charged.</li>
+          <li><strong>Vehicle Responsibility:</strong> The renter is responsible for the vehicle, keys, documents, and any damage or loss during the rental period.</li>
+          <li><strong>Payments &amp; Deposit:</strong> A security deposit is required at pickup and refunded after return if no additional charges apply.</li>
+          <li><strong>Late Returns:</strong> Late returns may result in additional charges or extension fees.</li>
+          <li><strong>Accidents:</strong> In case of an accident, the renter must immediately contact the police and Victory Car Rental. Third-party insurance is included as required by law.</li>
+          <li><strong>Traffic Fines:</strong> All traffic violations, parking tickets, and fines are the responsibility of the renter.</li>
+        </ul>
+
+        <p class="tiny" style="margin-top:14px;">
+          This is a summary of the rental agreement. Full terms are available upon request.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div>
+        <strong data-i18n="footer_name">Victory Car Rental Lease & Sale</strong>
+        <div class="tiny">© <span id="year"></span> <span data-i18n="footer_name">Victory Car Rental Lease & Sale</span>. <span data-i18n="rights">All rights reserved.</span></div>
+
+        <div class="payments">
+          <div class="payments__title" data-i18n="payments_title">Payment methods accepted</div>
+          <div class="payments__logos">
+            <img src="assets/payments/cash.png" alt="Cash" onerror="this.style.display='none'">
+            <img src="assets/payments/cirrus.png" alt="Cirrus" onerror="this.style.display='none'">
+            <img src="assets/payments/maestro.png" alt="Maestro" onerror="this.style.display='none'">
+            <img src="assets/payments/mastercard.png" alt="Mastercard" onerror="this.style.display='none'">
+            <img src="assets/payments/visa.png" alt="Visa" onerror="this.style.display='none'">
+          </div>
+        </div>
+      </div>
+
+      <div class="footer__links">
+        <a href="https://instagram.com/victorycarrental" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://facebook.com/victorycarrental" target="_blank" rel="noopener noreferrer">Facebook</a>
+        <a href="#fleet" data-i18n="nav_fleet">Fleet</a>
+        <a href="#contact" data-i18n="nav_contact">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
