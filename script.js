@@ -9,16 +9,16 @@ const USD_TO_XCG = 1.79;
 
 // Types: mini | compact | compact_suv | seven_seater
 const cars = [
-  { id:"spark",       name:"Chevrolet Spark",                type:"mini",         price:37, minDays:3, img:"assets/cars/chevrolet-spark.jpg" },
-  { id:"cruze",       name:"Chevrolet Cruze",                type:"compact",      price:43, minDays:3, img:"assets/cars/chevrolet-cruze.jpg" },
-  { id:"versa",       name:"Nissan Versa",                   type:"compact",      price:46, minDays:3, img:"assets/cars/nissan-versa.jpg" },
-  { id:"trax",        name:"Chevrolet Trax",                 type:"compact_suv",  price:51, minDays:3, img:"assets/cars/chevrolet-trax.jpg" },
-  { id:"soul",        name:"Kia Soul",                       type:"compact",      price:51, minDays:3, img:"assets/cars/kia-soul.jpg" },
-  { id:"venue",       name:"Hyundai Venue",                  type:"compact_suv",  price:54, minDays:3, img:"assets/cars/hyundai-venue.jpg" },
-  { id:"trailblazer", name:"Chevrolet Trailblazer",          type:"compact_suv",  price:54, minDays:3, img:"assets/cars/chevrolet-trailblazer.jpg" },
-  { id:"rogue",       name:"Nissan Rogue Sport",             type:"compact_suv",  price:63, minDays:3, img:"assets/cars/nissan-rogue-sport.jpg" },
+  { id:"spark",       name:"Chevrolet Spark",                type:"mini",         price:37, minDays:3, img:"assets/cars/chevrolet-spark.JPG" },
+  { id:"cruze",       name:"Chevrolet Cruze",                type:"compact",      price:43, minDays:3, img:"assets/cars/chevrolet-cruze.JPG" },
+  { id:"versa",       name:"Nissan Versa",                   type:"compact",      price:46, minDays:3, img:"assets/cars/nissan-versa.JPG" },
+  { id:"trax",        name:"Chevrolet Trax",                 type:"compact_suv",  price:51, minDays:3, img:"assets/cars/chevrolet-trax.JPG" },
+  { id:"soul",        name:"Kia Soul",                       type:"compact",      price:51, minDays:3, img:"assets/cars/kia-soul.JPG" },
+  { id:"venue",       name:"Hyundai Venue",                  type:"compact_suv",  price:54, minDays:3, img:"assets/cars/hyundai-venue.JPG" },
+  { id:"trailblazer", name:"Chevrolet Trailblazer",          type:"compact_suv",  price:54, minDays:3, img:"assets/cars/chevrolet-trailblazer.JPG" },
+  { id:"rogue",       name:"Nissan Rogue Sport",             type:"compact_suv",  price:63, minDays:3, img:"assets/cars/nissan-rogue-sport.JPG" },
   { id:"blazer",      name:"Chevrolet Blazer",               type:"compact_suv",  price:72, minDays:3, img:"assets/cars/chevrolet-blazer.jpg" },
-  { id:"traverse",    name:"Chevrolet Traverse (7 Seater)",  type:"seven_seater", price:83, minDays:3, img:"assets/cars/chevrolet-traverse.jpg" }
+  { id:"traverse",    name:"Chevrolet Traverse (7 Seater)",  type:"seven_seater", price:83, minDays:3, img:"assets/cars/chevrolet-traverse.JPG" }
 ];
 
 const $ = (sel, parent = document) => parent.querySelector(sel);
@@ -582,4 +582,5 @@ if(langSelect){
 $("#year").textContent = new Date().getFullYear();
 
 /* Init */
+
 applyI18n(getSavedLang());
