@@ -104,7 +104,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:rgba(42,167,86
 /* Hero */
 .hero{
   position:relative;background:#111;
-  background-image:url("./assets/curacao-banner.jpg");
+  background-image:url("./assets/curacao-banner.JPG");
   background-size:cover;background-position:center;
   padding:54px 0;color:#fff;
 }
@@ -268,4 +268,5 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:rgba(42,167,86
   line-height:1.9;
 }
 .policy-list li{margin-bottom:12px;}
+
 .policy-list strong{color:var(--text);}
