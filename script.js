@@ -16,7 +16,7 @@ const cars = [
   { id:"soul",        name:"Kia Soul",                       type:"compact",      price:51, minDays:3, img:"assets/cars/kia-soul.JPG" },
   { id:"venue",       name:"Hyundai Venue",                  type:"compact_suv",  price:54, minDays:3, img:"assets/cars/hyundai-venue.JPG" },
   { id:"trailblazer", name:"Chevrolet Trailblazer",          type:"compact_suv",  price:54, minDays:3, img:"assets/cars/chevrolet-trailblazer.JPG" },
-  { id:"rogue",       name:"Nissan Rogue Sport",             type:"compact_suv",  price:63, minDays:3, img:"assets/cars/nissan-rogue-sport.JPG" },
+  { id:"rogue",       name:"Nissan Rogue Sport",             type:"compact_suv",  price:63, minDays:3, img:"assets/cars/Nissan-Rogue-Sport.JPG" },
   { id:"blazer",      name:"Chevrolet Blazer",               type:"compact_suv",  price:72, minDays:3, img:"assets/cars/chevrolet-blazer.jpg" },
   { id:"traverse",    name:"Chevrolet Traverse (7 Seater)",  type:"seven_seater", price:83, minDays:3, img:"assets/cars/chevrolet-traverse.JPG" }
 ];
@@ -584,3 +584,4 @@ $("#year").textContent = new Date().getFullYear();
 /* Init */
 
 applyI18n(getSavedLang());
+
