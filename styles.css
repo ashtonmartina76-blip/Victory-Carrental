@@ -270,3 +270,99 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:rgba(42,167,86
 .policy-list li{margin-bottom:12px;}
 
 .policy-list strong{color:var(--text);}
+/* =========================================================
+   MOBILE ONLY FIXES (NO WORDS REMOVED / NO WORDS CHANGED)
+   Paste at the very bottom of styles.css
+========================================================= */
+
+/* Phones */
+@media (max-width:520px){
+
+  /* Prevent sideways scrolling without clipping content */
+  html, body { overflow-x: hidden; }
+
+  /* Make sure flex/grid children can shrink and wrap (prevents cut-off text) */
+  .topbar__inner,
+  .topbar__right,
+  .header__inner,
+  .brand,
+  .hero__inner,
+  .car__top,
+  .contact__line,
+  .footer__inner,
+  .curacao__layout,
+  .curacao__side{
+    min-width: 0;
+  }
+
+  /* IMPORTANT: never hide words on mobile */
+  .social span{ display: inline; }
+  .lang__label{ display: inline; }
+
+  /* Topbar: allow phone/email to wrap */
+  .topbar__right a{
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  /* Hero: stack into one column */
+  .hero__inner{
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  /* Keep hero card full width */
+  .hero__card{ width: 100%; }
+
+  /* Forms: make 2-col grids become 1-col */
+  .grid--2{ grid-template-columns: 1fr; }
+
+  /* Action buttons stack for easier tapping */
+  .actions--2{ grid-template-columns: 1fr; }
+
+  /* Fleet becomes 1 column */
+  .fleet{ grid-template-columns: 1fr; }
+
+  /* Car header: stack price so it doesn't squeeze text off-screen */
+  .car__top{
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Allow price block to wrap on phones */
+  .car__pricewrap{
+    text-align: left;
+    white-space: normal;
+  }
+
+  /* Car action buttons full width */
+  .car__actions{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .car__actions .btn{ width: 100%; }
+
+  /* Contact: allow long values (email/handles) to wrap */
+  .contact__line{
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .contact__line strong{
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  /* Mobile dropdown menu stays inside screen */
+  .nav{
+    left: 4%;
+    right: 4%;
+    width: auto;
+  }
+}
+
+/* Small phones */
+@media (max-width:380px){
+  .container{ width: min(1120px,94%); }
+  .btn{ padding: 11px 12px; }
+}
