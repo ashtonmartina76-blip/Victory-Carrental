@@ -616,7 +616,6 @@ document.addEventListener("click", function (e) {
   // Force jump to anchor first (most reliable on Android)
  // Don't trigger hash navigation here (Android can cancel scroll)
 // We'll only update the URL after scrolling succeeds.
-  }
 
   function doScroll() {
     var header = document.querySelector(".header");
@@ -693,6 +692,7 @@ if (nav) {
   });
 }
 applyI18n(getSavedLang());
+
 
 
 
