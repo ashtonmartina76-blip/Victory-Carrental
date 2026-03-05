@@ -594,42 +594,53 @@ for(var i=0;i<chips.length;i++){
 }
 
 /* Book button scroll + preselect car (use event delegation) */
-document.addEventListener("click", function(e){
+/* Book button scroll + preselect car (Android-safe) */
+document.addEventListener("click", function (e) {
+  // Find the element that has data-pick (works even if a child was tapped)
   var t = e.target;
-
-  // Walk up to find an element that has data-pick
-  while(t && t !== document && !t.getAttribute("data-pick")){
+  while (t && t !== document && !(t.getAttribute && t.getAttribute("data-pick"))) {
     t = t.parentNode;
   }
-  if(!t || t === document) return;
+  if (!t || t === document) return;
 
   var id = t.getAttribute("data-pick");
-  if(!id) return;
+  if (!id) return;
 
-  if(quickCarSelect) quickCarSelect.value = id;
-  if(contactCarSelect) contactCarSelect.value = id;
+  // Preselect car
+  if (quickCarSelect) quickCarSelect.value = id;
+  if (contactCarSelect) contactCarSelect.value = id;
 
- var contactSection = $("#contact");
+  var contactSection = document.getElementById("contact");
+  if (!contactSection) return;
 
-if (contactSection) {
-
-  // Force browser to jump to the section (works on all Android devices)
+  // Force jump to anchor first (most reliable on Android)
   if (window.location.hash !== "#contact") {
     window.location.hash = "contact";
   }
 
-  var doScroll = function () {
+  function doScroll() {
     var header = document.querySelector(".header");
     var headerH = header ? header.offsetHeight : 0;
 
-    var y = contactSection.getBoundingClientRect().top + window.pageYOffset - headerH - 12;
+    var y =
+      contactSection.getBoundingClientRect().top +
+      window.pageYOffset -
+      headerH -
+      12;
 
+    // Force movement (reliable), then attempt smooth
+    window.scrollTo(0, y);
     try {
       window.scrollTo({ top: y, behavior: "smooth" });
-    } catch (e) {
-      window.scrollTo(0, y);
-    }
-  };
+    } catch (err) {}
+  }
+
+  // Run multiple times for Android repaint/layout timing
+  doScroll();
+  if (window.requestAnimationFrame) requestAnimationFrame(doScroll);
+  setTimeout(doScroll, 60);
+  setTimeout(doScroll, 250);
+});
 
   // run multiple times (Android sometimes ignores first scroll)
   doScroll();
@@ -682,6 +693,7 @@ if (nav) {
   });
 }
 applyI18n(getSavedLang());
+
 
 
 
