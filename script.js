@@ -560,7 +560,8 @@ document.addEventListener("click", (e)=>{
 /* Mobile menu */
 const burger = $("#burger");
 const nav = $("#nav");
-burger?.addEventListener("click", ()=>{
+burger.addEventListener("click", function(e){
+  e.preventDefault();
   const open = nav.classList.toggle("is-open");
   burger.setAttribute("aria-expanded", String(open));
 });
@@ -584,4 +585,5 @@ $("#year").textContent = new Date().getFullYear();
 /* Init */
 
 applyI18n(getSavedLang());
+
 
