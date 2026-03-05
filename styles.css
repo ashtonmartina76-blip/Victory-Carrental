@@ -425,16 +425,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:rgba(42,167,86
 a, button{
   touch-action: manipulation;
 }
-/* Prevent hidden mobile nav from blocking taps (Android fix) */
-.nav{
-  pointer-events: none;
-}
-
-.nav.is-open{
-  pointer-events: auto;
-}
 /* Android tap reliability */
-a, button { cursor: pointer; }
+body { -webkit-tap-highlight-color: transparent; }
+a, button { touch-action: manipulation; }
+
 
 
 
