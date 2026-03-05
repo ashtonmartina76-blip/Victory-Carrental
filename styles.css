@@ -426,5 +426,7 @@ a, button{
 .nav.is-open{
   pointer-events: auto;
 }
+/* Android tap reliability */
+a, button { cursor: pointer; }
 
 
