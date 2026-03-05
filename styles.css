@@ -400,4 +400,14 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:rgba(42,167,86
   .container{ width: min(1120px,94%); }
   .btn{ padding: 11px 12px; }
 }
+/* Make visual overlays not block taps (Android fix) */
+.hero__overlay,
+.curacao__storyOverlay{
+  pointer-events: none;
+}
+
+/* Helps Android treat taps as clicks faster/cleaner */
+a, button{
+  touch-action: manipulation;
+}
 
