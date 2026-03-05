@@ -609,12 +609,22 @@ document.addEventListener("click", function(e){
   if(quickCarSelect) quickCarSelect.value = id;
   if(contactCarSelect) contactCarSelect.value = id;
 
-  var contactSection = $("#contact");
-  if(contactSection && contactSection.scrollIntoView){
-    contactSection.scrollIntoView({ behavior: "smooth" });
-  }else{
-    window.location.hash = "#contact";
-  }
+ var contactSection = $("#contact");
+
+if(contactSection){
+  var header = document.querySelector(".header");
+  var headerH = header ? header.offsetHeight : 0;
+
+  var y = contactSection.getBoundingClientRect().top + window.pageYOffset - headerH - 12;
+
+  window.scrollTo({
+    top: y,
+    behavior: "smooth"
+  });
+}else{
+  window.location.hash = "#contact";
+}
+  
 });
 
 /* Mobile menu */
@@ -659,4 +669,5 @@ if (nav) {
   });
 }
 applyI18n(getSavedLang());
+
 
