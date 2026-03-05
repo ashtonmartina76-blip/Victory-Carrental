@@ -1,14 +1,15 @@
 // ===============================
 // Victory Car Rental - script.js
 // Adds: WhatsApp OR Email booking option (no WhatsApp account needed for email)
+// Android-safe (ES5-compatible) so buttons work on more Android devices
 // ===============================
 
-const COMPANY_WHATSAPP = "59996913342";
-const COMPANY_EMAIL = "victorycarrental@outlook.com";
-const USD_TO_XCG = 1.79;
+var COMPANY_WHATSAPP = "59996913342";
+var COMPANY_EMAIL = "victorycarrental@outlook.com";
+var USD_TO_XCG = 1.79;
 
 // Types: mini | compact | compact_suv | seven_seater
-const cars = [
+var cars = [
   { id:"spark",       name:"Chevrolet Spark",                type:"mini",         price:37, minDays:3, img:"assets/cars/chevrolet-spark.JPG" },
   { id:"cruze",       name:"Chevrolet Cruze",                type:"compact",      price:43, minDays:3, img:"assets/cars/chevrolet-cruze.JPG" },
   { id:"versa",       name:"Nissan Versa",                   type:"compact",      price:46, minDays:3, img:"assets/cars/nissan-versa.JPG" },
@@ -21,13 +22,23 @@ const cars = [
   { id:"traverse",    name:"Chevrolet Traverse (7 Seater)",  type:"seven_seater", price:83, minDays:3, img:"assets/cars/chevrolet-traverse.JPG" }
 ];
 
-const $ = (sel, parent = document) => parent.querySelector(sel);
-const $$ = (sel, parent = document) => Array.from(parent.querySelectorAll(sel));
+function $(sel, parent){
+  if(!parent) parent = document;
+  return parent.querySelector(sel);
+}
+function $$(sel, parent){
+  if(!parent) parent = document;
+  return Array.prototype.slice.call(parent.querySelectorAll(sel));
+}
 
-const moneyUSD = (n) => `$${Number(n).toFixed(0)}`;
-const moneyXCG = (usd) => `XCG ${(Number(usd) * USD_TO_XCG).toFixed(2)}`;
+function moneyUSD(n){
+  return "$" + Number(n).toFixed(0);
+}
+function moneyXCG(usd){
+  return "XCG " + (Number(usd) * USD_TO_XCG).toFixed(2);
+}
 
-const TYPE_LABELS = {
+var TYPE_LABELS = {
   mini: "MINI",
   compact: "COMPACT",
   compact_suv: "COMPACT SUV",
@@ -37,7 +48,7 @@ const TYPE_LABELS = {
 /* =========================
    i18n
 ========================= */
-const i18n = {
+var i18n = {
   en: {
     language: "Language",
     topbar_location: "Curaçao, Willemstad • Airport pickup & drop-off",
@@ -74,7 +85,7 @@ const i18n = {
     filter_all: "All",
     filter_mini: "Mini",
     filter_compact: "Compact",
-    filter_compact_suv: "SUV", // ✅ CHANGED
+    filter_compact_suv: "SUV",
     filter_7seater: "7 Seater",
 
     services_title: "Services",
@@ -90,7 +101,7 @@ const i18n = {
     srv3_title: "Vehicle Features",
     srv3_1: "A/C in all cars",
     srv3_2: "Bluetooth in all cars",
-    srv3_3: "Automatic & manual transmission available", // ✅ CHANGED
+    srv3_3: "Automatic & manual transmission available",
 
     contact_title: "Contact",
     contact_sub: "Send your dates + preferred car and we’ll confirm availability.",
@@ -170,7 +181,7 @@ const i18n = {
     filter_all: "Alles",
     filter_mini: "Mini",
     filter_compact: "Compact",
-    filter_compact_suv: "SUV", // ✅ CHANGED
+    filter_compact_suv: "SUV",
     filter_7seater: "7-zitter",
 
     services_title: "Services",
@@ -186,7 +197,7 @@ const i18n = {
     srv3_title: "Auto functies",
     srv3_1: "Airco in alle auto’s",
     srv3_2: "Bluetooth in alle auto’s",
-    srv3_3: "Automaat & handgeschakeld beschikbaar", // ✅ CHANGED
+    srv3_3: "Automaat & handgeschakeld beschikbaar",
 
     contact_title: "Contact",
     contact_sub: "Stuur je data + gewenste auto — we bevestigen beschikbaarheid.",
@@ -266,7 +277,7 @@ const i18n = {
     filter_all: "Todos",
     filter_mini: "Mini",
     filter_compact: "Compacto",
-    filter_compact_suv: "SUV", // ✅ CHANGED
+    filter_compact_suv: "SUV",
     filter_7seater: "7 plazas",
 
     services_title: "Servicios",
@@ -282,7 +293,7 @@ const i18n = {
     srv3_title: "Características del auto",
     srv3_1: "A/C en todos los autos",
     srv3_2: "Bluetooth en todos los autos",
-    srv3_3: "Transmisión automática y manual disponible", // ✅ CHANGED
+    srv3_3: "Transmisión automática y manual disponible",
 
     contact_title: "Contacto",
     contact_sub: "Envíanos fechas + auto preferido y confirmamos disponibilidad.",
@@ -327,90 +338,103 @@ const i18n = {
   }
 };
 
-function getSavedLang(){ return localStorage.getItem("vcr_lang") || "en"; }
-function setSavedLang(lang){ localStorage.setItem("vcr_lang", lang); }
+function getSavedLang(){
+  return localStorage.getItem("vcr_lang") || "en";
+}
+function setSavedLang(lang){
+  localStorage.setItem("vcr_lang", lang);
+}
 
 function applyI18n(lang){
-  const dict = i18n[lang] || i18n.en;
+  var dict = i18n[lang] || i18n.en;
 
-  $$("[data-i18n]").forEach((el)=>{
-    const key = el.getAttribute("data-i18n");
+  var nodes = $$("[data-i18n]");
+  for(var i=0;i<nodes.length;i++){
+    var el = nodes[i];
+    var key = el.getAttribute("data-i18n");
     if(dict[key]) el.textContent = dict[key];
-  });
+  }
 
-  $$("[data-i18n-placeholder]").forEach((el)=>{
-    const key = el.getAttribute("data-i18n-placeholder");
-    if(dict[key]) el.setAttribute("placeholder", dict[key]);
-  });
+  var ph = $$("[data-i18n-placeholder]");
+  for(var j=0;j<ph.length;j++){
+    var el2 = ph[j];
+    var key2 = el2.getAttribute("data-i18n-placeholder");
+    if(dict[key2]) el2.setAttribute("placeholder", dict[key2]);
+  }
 
   populateSelects(lang);
   renderFleet(getActiveFilter(), lang);
 }
 
 function getActiveFilter(){
-  const active = document.querySelector(".chip.is-active");
-  return active ? active.dataset.filter : "all";
+  var active = document.querySelector(".chip.is-active");
+  return active ? active.getAttribute("data-filter") : "all";
 }
 
 /* Rendering */
-const fleetGrid = $("#fleetGrid");
-const quickCarSelect = $("#quickCarSelect");
-const contactCarSelect = $("#contactCarSelect");
+var fleetGrid = $("#fleetGrid");
+var quickCarSelect = $("#quickCarSelect");
+var contactCarSelect = $("#contactCarSelect");
 
-function renderFleet(filter="all", lang="en"){
+function renderFleet(filter, lang){
+  if(!filter) filter = "all";
+  if(!lang) lang = "en";
   if(!fleetGrid) return;
-  const dict = i18n[lang] || i18n.en;
+
+  var dict = i18n[lang] || i18n.en;
 
   fleetGrid.innerHTML = "";
-  const list = (filter === "all") ? cars : cars.filter(c => c.type === filter);
+  var list = (filter === "all") ? cars : cars.filter(function(c){ return c.type === filter; });
 
-  list.forEach((car)=>{
-    const xcg = moneyXCG(car.price);
-    const typeLabel = TYPE_LABELS[car.type] || car.type.toUpperCase();
+  for(var i=0;i<list.length;i++){
+    var car = list[i];
+    var xcg = moneyXCG(car.price);
+    var typeLabel = TYPE_LABELS[car.type] || String(car.type).toUpperCase();
 
-    const el = document.createElement("div");
+    var el = document.createElement("div");
     el.className = "card car";
-    el.innerHTML = `
-      <div class="car__img">
-        <img src="${car.img}" alt="${car.name}"
-          onerror="this.style.display='none'; this.parentElement.textContent='Image missing';" />
-      </div>
+    el.innerHTML =
+      '<div class="car__img">' +
+        '<img src="' + car.img + '" alt="' + car.name + '" onerror="this.style.display=\'none\'; this.parentElement.textContent=\'Image missing\';" />' +
+      '</div>' +
+      '<div class="car__body">' +
+        '<div class="car__top">' +
+          '<div>' +
+            '<div class="car__title">' + car.name + ' <span class="car__similar">/ Similar</span></div>' +
+            '<div class="car__type">' + typeLabel + '</div>' +
+          '</div>' +
+          '<div class="car__pricewrap">' +
+            '<div class="car__price">' + dict.from + ' ' + moneyUSD(car.price) + dict.per_day + '</div>' +
+            '<div class="car__xcg">' + xcg + dict.per_day + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="car__meta">' +
+          dict.minimum + ' ' + car.minDays + ' ' + dict.days + ' • ' + dict.airport_pickup_available +
+        '</div>' +
+        '<div class="car__actions">' +
+          '<button class="btn btn--primary" data-pick="' + car.id + '">' + dict.book + '</button>' +
+          '<a class="btn btn--outline" href="tel:+59996913342">' + dict.call + '</a>' +
+        '</div>' +
+      '</div>';
 
-      <div class="car__body">
-        <div class="car__top">
-          <div>
-            <div class="car__title">${car.name} <span class="car__similar">/ Similar</span></div>
-            <div class="car__type">${typeLabel}</div>
-          </div>
-
-          <div class="car__pricewrap">
-            <div class="car__price">${dict.from} ${moneyUSD(car.price)}${dict.per_day}</div>
-            <div class="car__xcg">${xcg}${dict.per_day}</div>
-          </div>
-        </div>
-
-        <div class="car__meta">
-          ${dict.minimum} ${car.minDays} ${dict.days} • ${dict.airport_pickup_available}
-        </div>
-
-        <div class="car__actions">
-          <button class="btn btn--primary" data-pick="${car.id}">${dict.book}</button>
-          <a class="btn btn--outline" href="tel:+59996913342">${dict.call}</a>
-        </div>
-      </div>
-    `;
     fleetGrid.appendChild(el);
-  });
+  }
 }
 
-function populateSelects(lang="en"){
-  const dict = i18n[lang] || i18n.en;
-  const base = `<option value="">${dict.car_type}</option>`;
+function populateSelects(lang){
+  if(!lang) lang = "en";
+  var dict = i18n[lang] || i18n.en;
+  var base = '<option value="">' + dict.car_type + '</option>';
 
-  const opts = cars.map((c)=>{
-    const xcg = moneyXCG(c.price);
-    return `<option value="${c.id}">${c.name} / Similar — ${moneyUSD(c.price)}${dict.per_day} / ${xcg}${dict.per_day} (${dict.minimum} ${c.minDays} ${dict.days})</option>`;
-  }).join("");
+  var opts = "";
+  for(var i=0;i<cars.length;i++){
+    var c = cars[i];
+    var xcg = moneyXCG(c.price);
+    opts += '<option value="' + c.id + '">' +
+      c.name + ' / Similar — ' + moneyUSD(c.price) + dict.per_day + ' / ' + xcg + dict.per_day +
+      ' (' + dict.minimum + ' ' + c.minDays + ' ' + dict.days + ')' +
+    '</option>';
+  }
 
   if(quickCarSelect) quickCarSelect.innerHTML = base + opts;
   if(contactCarSelect) contactCarSelect.innerHTML = base + opts;
@@ -420,170 +444,208 @@ function populateSelects(lang="en"){
    WhatsApp + Email handlers
 ========================= */
 function openWhatsApp(message){
-  const url = `https://wa.me/${COMPANY_WHATSAPP}?text=${encodeURIComponent(message)}`;
+  var url = "https://wa.me/" + COMPANY_WHATSAPP + "?text=" + encodeURIComponent(message);
   window.open(url, "_blank");
 }
 
 function openEmail(subject, body){
-  const mailto = `mailto:${COMPANY_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  var mailto = "mailto:" + COMPANY_EMAIL + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
   window.location.href = mailto;
 }
 
 /**
  * Determine which submit button was pressed.
- * Works because each button has name="channel" value="whatsapp|email"
+ * (Older Android browsers may not support evt.submitter — we fall back to whatsapp)
  */
 function getSubmitChannel(evt){
-  const btn = evt?.submitter;
-  const channel = btn?.value || "whatsapp";
+  var btn = evt && evt.submitter;
+  var channel = (btn && btn.value) ? btn.value : "whatsapp";
   return (channel === "email") ? "email" : "whatsapp";
 }
 
-function buildQuoteMessage({ dict, data, car }){
-  const usd = car ? car.price : "";
-  const xcg = car ? (usd * USD_TO_XCG).toFixed(2) : "";
-  const carLine = car ? (car.name + " / Similar") : "";
+function buildQuoteMessage(args){
+  var dict = args.dict;
+  var data = args.data;
+  var car = args.car;
+
+  var usd = car ? car.price : "";
+  var xcg = car ? (usd * USD_TO_XCG).toFixed(2) : "";
+  var carLine = car ? (car.name + " / Similar") : "";
+  var priceLine = car ? (dict.from + " $" + usd + dict.per_day + " / XCG " + xcg + dict.per_day) : "";
 
   return (
-`Hi Victory Car Rental 👋
-
-${dict.pickup_date}: ${data.pickup_date}
-${dict.return_date}: ${data.return_date}
-${dict.pickup_location}: ${data.pickup_location}
-${dict.car_type}: ${carLine}
-
-${car ? `${dict.from} $${usd}${dict.per_day} / XCG ${xcg}${dict.per_day}` : ""}
-
-${dict.minimum} 3 ${dict.days}.`
+    "Hi Victory Car Rental 👋\n\n" +
+    dict.pickup_date + ": " + data.pickup_date + "\n" +
+    dict.return_date + ": " + data.return_date + "\n" +
+    dict.pickup_location + ": " + data.pickup_location + "\n" +
+    dict.car_type + ": " + carLine + "\n\n" +
+    priceLine + "\n\n" +
+    dict.minimum + " 3 " + dict.days + "."
   ).trim();
 }
 
-function buildContactMessage({ dict, data, car }){
-  const usd = car ? car.price : "";
-  const xcg = car ? (usd * USD_TO_XCG).toFixed(2) : "";
-  const carLine = car ? (car.name + " / Similar") : "";
+function buildContactMessage(args){
+  var dict = args.dict;
+  var data = args.data;
+  var car = args.car;
+
+  var usd = car ? car.price : "";
+  var xcg = car ? (usd * USD_TO_XCG).toFixed(2) : "";
+  var carLine = car ? (car.name + " / Similar") : "";
+  var priceLine = car ? (dict.from + " $" + usd + dict.per_day + " / XCG " + xcg + dict.per_day) : "";
 
   return (
-`Hi Victory Car Rental 👋
-
-${dict.name}: ${data.name}
-${dict.phone}: ${data.phone || "N/A"}
-
-${dict.pickup_date}: ${data.pickup_date}
-${dict.return_date}: ${data.return_date}
-${dict.pickup_location}: ${data.pickup_location}
-${dict.car_type}: ${carLine}
-
-${car ? `${dict.from} $${usd}${dict.per_day} / XCG ${xcg}${dict.per_day}` : ""}
-
-${dict.message}: ${data.message}`
+    "Hi Victory Car Rental 👋\n\n" +
+    dict.name + ": " + data.name + "\n" +
+    dict.phone + ": " + (data.phone || "N/A") + "\n\n" +
+    dict.pickup_date + ": " + data.pickup_date + "\n" +
+    dict.return_date + ": " + data.return_date + "\n" +
+    dict.pickup_location + ": " + data.pickup_location + "\n" +
+    dict.car_type + ": " + carLine + "\n\n" +
+    priceLine + "\n\n" +
+    dict.message + ": " + data.message
   ).trim();
 }
 
 /* Quick Quote submit */
-$("#quickQuoteForm")?.addEventListener("submit", function(e){
-  e.preventDefault();
+var quickForm = $("#quickQuoteForm");
+if(quickForm){
+  quickForm.addEventListener("submit", function(e){
+    e.preventDefault();
 
-  const lang = getSavedLang();
-  const dict = i18n[lang] || i18n.en;
-  const channel = getSubmitChannel(e);
+    var lang = getSavedLang();
+    var dict = i18n[lang] || i18n.en;
+    var channel = getSubmitChannel(e);
 
-  const d = new FormData(this);
-  const car = cars.find(c => c.id === d.get("car_id"));
+    var d = new FormData(quickForm);
+    var carId = d.get("car_id");
+    var car = null;
+    for(var i=0;i<cars.length;i++){
+      if(cars[i].id === carId){ car = cars[i]; break; }
+    }
 
-  const payload = {
-    pickup_date: d.get("pickup_date"),
-    return_date: d.get("return_date"),
-    pickup_location: d.get("pickup_location"),
-    car_id: d.get("car_id")
-  };
+    var payload = {
+      pickup_date: d.get("pickup_date"),
+      return_date: d.get("return_date"),
+      pickup_location: d.get("pickup_location"),
+      car_id: carId
+    };
 
-  const msg = buildQuoteMessage({ dict, data: payload, car });
+    var msg = buildQuoteMessage({ dict: dict, data: payload, car: car });
 
-  if(channel === "email"){
-    openEmail("Victory Car Rental — Quick Quote Request", msg);
-  }else{
-    openWhatsApp(msg);
-  }
-});
+    if(channel === "email"){
+      openEmail("Victory Car Rental — Quick Quote Request", msg);
+    }else{
+      openWhatsApp(msg);
+    }
+  });
+}
 
 /* Contact submit */
-$("#contactForm")?.addEventListener("submit", function(e){
-  e.preventDefault();
+var contactForm = $("#contactForm");
+if(contactForm){
+  contactForm.addEventListener("submit", function(e){
+    e.preventDefault();
 
-  const lang = getSavedLang();
-  const dict = i18n[lang] || i18n.en;
-  const channel = getSubmitChannel(e);
+    var lang = getSavedLang();
+    var dict = i18n[lang] || i18n.en;
+    var channel = getSubmitChannel(e);
 
-  const d = new FormData(this);
-  const car = cars.find(c => c.id === d.get("car_id"));
+    var d = new FormData(contactForm);
+    var carId = d.get("car_id");
+    var car = null;
+    for(var i=0;i<cars.length;i++){
+      if(cars[i].id === carId){ car = cars[i]; break; }
+    }
 
-  const payload = {
-    name: d.get("name"),
-    phone: d.get("phone"),
-    pickup_date: d.get("pickup_date"),
-    return_date: d.get("return_date"),
-    pickup_location: d.get("pickup_location"),
-    car_id: d.get("car_id"),
-    message: d.get("message")
-  };
+    var payload = {
+      name: d.get("name"),
+      phone: d.get("phone"),
+      pickup_date: d.get("pickup_date"),
+      return_date: d.get("return_date"),
+      pickup_location: d.get("pickup_location"),
+      car_id: carId,
+      message: d.get("message")
+    };
 
-  const msg = buildContactMessage({ dict, data: payload, car });
+    var msg = buildContactMessage({ dict: dict, data: payload, car: car });
 
-  if(channel === "email"){
-    openEmail("Victory Car Rental — Booking Request", msg);
-  }else{
-    openWhatsApp(msg);
-  }
-});
+    if(channel === "email"){
+      openEmail("Victory Car Rental — Booking Request", msg);
+    }else{
+      openWhatsApp(msg);
+    }
+  });
+}
 
 /* Filter chips */
-$$(".chip").forEach((btn)=>{
-  btn.addEventListener("click", ()=>{
-    $$(".chip").forEach(b => b.classList.remove("is-active"));
-    btn.classList.add("is-active");
-    renderFleet(btn.dataset.filter, getSavedLang());
-  });
-});
+var chips = $$(".chip");
+for(var i=0;i<chips.length;i++){
+  (function(btn){
+    btn.addEventListener("click", function(){
+      var all = $$(".chip");
+      for(var k=0;k<all.length;k++){
+        all[k].classList.remove("is-active");
+      }
+      btn.classList.add("is-active");
+      renderFleet(btn.getAttribute("data-filter"), getSavedLang());
+    });
+  })(chips[i]);
+}
 
-/* Book button scroll + preselect car */
-document.addEventListener("click", (e)=>{
-  const id = e.target?.dataset?.pick;
+/* Book button scroll + preselect car (use event delegation) */
+document.addEventListener("click", function(e){
+  var t = e.target;
+
+  // Walk up to find an element that has data-pick
+  while(t && t !== document && !t.getAttribute("data-pick")){
+    t = t.parentNode;
+  }
+  if(!t || t === document) return;
+
+  var id = t.getAttribute("data-pick");
   if(!id) return;
 
   if(quickCarSelect) quickCarSelect.value = id;
   if(contactCarSelect) contactCarSelect.value = id;
 
-  $("#contact")?.scrollIntoView({ behavior: "smooth" });
+  var contactSection = $("#contact");
+  if(contactSection && contactSection.scrollIntoView){
+    contactSection.scrollIntoView({ behavior: "smooth" });
+  }else{
+    window.location.hash = "#contact";
+  }
 });
 
 /* Mobile menu */
-const burger = $("#burger");
-const nav = $("#nav");
-burger.addEventListener("click", function(e){
-  e.preventDefault();
-  const open = nav.classList.toggle("is-open");
-  burger.setAttribute("aria-expanded", String(open));
-});
+var burger = $("#burger");
+var nav = $("#nav");
+if(burger && nav){
+  burger.addEventListener("click", function(e){
+    e.preventDefault();
+    var open = nav.classList.toggle("is-open");
+    burger.setAttribute("aria-expanded", String(open));
+  });
+}
 
 /* Language selector */
-const langSelect = $("#langSelect");
+var langSelect = $("#langSelect");
 if(langSelect){
-  const initial = getSavedLang();
+  var initial = getSavedLang();
   langSelect.value = initial;
 
-  langSelect.addEventListener("change", ()=>{
-    const lang = langSelect.value;
+  langSelect.addEventListener("change", function(){
+    var lang = langSelect.value;
     setSavedLang(lang);
     applyI18n(lang);
   });
 }
 
 /* Footer year */
-$("#year").textContent = new Date().getFullYear();
+var yearEl = $("#year");
+if(yearEl){
+  yearEl.textContent = new Date().getFullYear();
+}
 
 /* Init */
-
 applyI18n(getSavedLang());
-
-
