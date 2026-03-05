@@ -237,15 +237,23 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:rgba(42,167,86
   .nav{
     position:absolute;top:72px;right:4%;
     width:min(380px,92%);
-    display:none;flex-direction:column;align-items:stretch;padding:12px;
+    display:flex;flex-direction:column;align-items:stretch;padding:12px;
     border:1px solid var(--line);border-radius:18px;background:#fff;box-shadow:var(--shadow);
+
+    opacity:0;
+  visibility:hidden;
+  pointer-events:none;
   }
-  .nav.is-open{display:flex;}
+  .nav.is-open{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+}
   .grid--2{grid-template-columns:1fr;}
   .actions--2{grid-template-columns:1fr;}
   .brand__logo{width:56px;height:56px;}
-  .social span{display:none;}
-  .lang__label{display:none;}
+  .social span{display:inline;}
+  .lang__label{display:inline;}
 
   /* Payments smaller on mobile (still bigger than before) */
   .payments__logos img{
@@ -418,4 +426,5 @@ a, button{
 .nav.is-open{
   pointer-events: auto;
 }
+
 
