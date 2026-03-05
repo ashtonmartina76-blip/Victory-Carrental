@@ -648,4 +648,15 @@ if(yearEl){
 }
 
 /* Init */
+// Close mobile nav when a link is clicked (prevents tap-block issues)
+if (nav) {
+  nav.addEventListener("click", function(e){
+    var t = e.target;
+    if (t && t.tagName === "A" && nav.classList.contains("is-open")) {
+      nav.classList.remove("is-open");
+      if (burger) burger.setAttribute("aria-expanded", "false");
+    }
+  });
+}
 applyI18n(getSavedLang());
+
