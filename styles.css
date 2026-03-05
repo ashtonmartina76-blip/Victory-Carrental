@@ -277,7 +277,41 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:rgba(42,167,86
 
 /* Phones */
 @media (max-width:520px){
+  /* ===== Fix hero card overflow on phones ===== */
 
+  /* Make the hero container truly fit the screen */
+  .hero .container{
+    width: min(1120px, 94%);
+  }
+
+  /* Ensure the hero card doesn't exceed the viewport */
+  .hero__card{
+    max-width: 100%;
+  }
+
+  /* Reduce padding a bit so the form fits nicely */
+  .hero__card.card{
+    padding: 14px;
+  }
+
+  /* Make inputs/selects not overflow */
+  input, select, textarea{
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Buttons: prevent text clipping */
+  .btn{
+    max-width: 100%;
+    white-space: normal;
+    text-align: center;
+  }
+
+  /* Extra safety: make action row full-width */
+  .actions,
+  .actions--2{
+    width: 100%;
+  }
   /* Prevent sideways scrolling without clipping content */
   html, body { overflow-x: hidden; }
 
@@ -366,3 +400,4 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:rgba(42,167,86
   .container{ width: min(1120px,94%); }
   .btn{ padding: 11px 12px; }
 }
+
