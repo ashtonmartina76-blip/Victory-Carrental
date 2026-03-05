@@ -614,8 +614,8 @@ document.addEventListener("click", function (e) {
   if (!contactSection) return;
 
   // Force jump to anchor first (most reliable on Android)
-  if (window.location.hash !== "#contact") {
-    window.location.hash = "contact";
+ // Don't trigger hash navigation here (Android can cancel scroll)
+// We'll only update the URL after scrolling succeeds.
   }
 
   function doScroll() {
@@ -693,6 +693,7 @@ if (nav) {
   });
 }
 applyI18n(getSavedLang());
+
 
 
 
