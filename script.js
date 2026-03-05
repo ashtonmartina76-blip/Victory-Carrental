@@ -611,18 +611,31 @@ document.addEventListener("click", function(e){
 
  var contactSection = $("#contact");
 
-if(contactSection){
-  var header = document.querySelector(".header");
-  var headerH = header ? header.offsetHeight : 0;
+if (contactSection) {
 
-  var y = contactSection.getBoundingClientRect().top + window.pageYOffset - headerH - 12;
+  // Force browser to jump to the section (works on all Android devices)
+  if (window.location.hash !== "#contact") {
+    window.location.hash = "contact";
+  }
 
-  window.scrollTo({
-    top: y,
-    behavior: "smooth"
-  });
-}else{
-  window.location.hash = "#contact";
+  var doScroll = function () {
+    var header = document.querySelector(".header");
+    var headerH = header ? header.offsetHeight : 0;
+
+    var y = contactSection.getBoundingClientRect().top + window.pageYOffset - headerH - 12;
+
+    try {
+      window.scrollTo({ top: y, behavior: "smooth" });
+    } catch (e) {
+      window.scrollTo(0, y);
+    }
+  };
+
+  // run multiple times (Android sometimes ignores first scroll)
+  doScroll();
+  setTimeout(doScroll, 60);
+  setTimeout(doScroll, 250);
+
 }
   
 });
@@ -669,5 +682,6 @@ if (nav) {
   });
 }
 applyI18n(getSavedLang());
+
 
 
