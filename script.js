@@ -590,7 +590,7 @@ for(var i=0;i<chips.length;i++){
   })(chips[i]);
 }
 
-/* Book button in fleet: preselect car + go to contact */
+/* Book button in fleet: preselect car + always scroll to contact */
 document.addEventListener("click", function(e){
   var t = e.target;
 
@@ -610,21 +610,22 @@ document.addEventListener("click", function(e){
   var contactSection = document.getElementById("contact");
   if(!contactSection) return;
 
-  // Most reliable way: jump to anchor first
-  window.location.hash = "contact";
-
-  function fixScroll(){
+  function goToContact(){
     var header = document.querySelector(".header");
     var headerH = header ? header.offsetHeight : 0;
     var y = contactSection.getBoundingClientRect().top + window.pageYOffset - headerH - 12;
-    window.scrollTo(0, y);
+
+    try{
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }catch(err){
+      window.scrollTo(0, y);
+    }
   }
 
-  setTimeout(fixScroll, 0);
-  setTimeout(fixScroll, 80);
-  setTimeout(fixScroll, 250);
+  goToContact();
+  setTimeout(goToContact, 80);
+  setTimeout(goToContact, 220);
 });
-
 /* Mobile menu */
 var burger = $("#burger");
 var nav = $("#nav");
@@ -692,4 +693,5 @@ if(yearEl){
 
 /* Init */
 applyI18n(getSavedLang());
+
 
