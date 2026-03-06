@@ -628,6 +628,7 @@ document.addEventListener("click", function(e){
 /* Mobile menu */
 var burger = $("#burger");
 var nav = $("#nav");
+
 if(burger && nav){
   burger.addEventListener("click", function(e){
     if(e && e.cancelable) e.preventDefault();
@@ -635,16 +636,39 @@ if(burger && nav){
     burger.setAttribute("aria-expanded", String(open));
   });
 
-  nav.addEventListener("click", function(e){
+  function handleNavLinkTap(e){
     var t = e.target;
     while(t && t !== nav && t.tagName !== "A"){
       t = t.parentNode;
     }
-    if(t && t.tagName === "A" && nav.classList.contains("is-open")){
-      nav.classList.remove("is-open");
-      burger.setAttribute("aria-expanded", "false");
+    if(!t || t === nav || t.tagName !== "A") return;
+
+    if(e && e.cancelable) e.preventDefault();
+
+    var href = t.getAttribute("href") || "";
+
+    nav.classList.remove("is-open");
+    burger.setAttribute("aria-expanded", "false");
+
+    if(href.charAt(0) === "#"){
+      var target = document.querySelector(href);
+      if(target){
+        var header = document.querySelector(".header");
+        var headerH = header ? header.offsetHeight : 0;
+        var y = target.getBoundingClientRect().top + window.pageYOffset - headerH - 12;
+
+        window.scrollTo(0, y);
+        setTimeout(function(){ window.scrollTo(0, y); }, 80);
+        setTimeout(function(){ window.scrollTo(0, y); }, 250);
+      }
+      return;
     }
-  });
+
+    window.location.href = href;
+  }
+
+  nav.addEventListener("click", handleNavLinkTap, true);
+  nav.addEventListener("touchend", handleNavLinkTap, { capture:true, passive:false });
 }
 
 /* Language selector */
@@ -668,3 +692,4 @@ if(yearEl){
 
 /* Init */
 applyI18n(getSavedLang());
+
