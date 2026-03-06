@@ -1,6 +1,7 @@
 // ===============================
 // Victory Car Rental - script.js
 // Adds: WhatsApp OR Email booking option (no WhatsApp account needed for email)
+// + Reliable Book button scroll for ALL devices (Android safe)
 // ===============================
 
 const COMPANY_WHATSAPP = "59996913342";
@@ -74,7 +75,7 @@ const i18n = {
     filter_all: "All",
     filter_mini: "Mini",
     filter_compact: "Compact",
-    filter_compact_suv: "SUV",
+    filter_compact_suv: "SUV", // ✅ CHANGED
     filter_7seater: "7 Seater",
 
     services_title: "Services",
@@ -90,7 +91,7 @@ const i18n = {
     srv3_title: "Vehicle Features",
     srv3_1: "A/C in all cars",
     srv3_2: "Bluetooth in all cars",
-    srv3_3: "Automatic & manual transmission available",
+    srv3_3: "Automatic & manual transmission available", // ✅ CHANGED
 
     contact_title: "Contact",
     contact_sub: "Send your dates + preferred car and we’ll confirm availability.",
@@ -170,7 +171,7 @@ const i18n = {
     filter_all: "Alles",
     filter_mini: "Mini",
     filter_compact: "Compact",
-    filter_compact_suv: "SUV",
+    filter_compact_suv: "SUV", // ✅ CHANGED
     filter_7seater: "7-zitter",
 
     services_title: "Services",
@@ -186,7 +187,7 @@ const i18n = {
     srv3_title: "Auto functies",
     srv3_1: "Airco in alle auto’s",
     srv3_2: "Bluetooth in alle auto’s",
-    srv3_3: "Automaat & handgeschakeld beschikbaar",
+    srv3_3: "Automaat & handgeschakeld beschikbaar", // ✅ CHANGED
 
     contact_title: "Contact",
     contact_sub: "Stuur je data + gewenste auto — we bevestigen beschikbaarheid.",
@@ -266,7 +267,7 @@ const i18n = {
     filter_all: "Todos",
     filter_mini: "Mini",
     filter_compact: "Compacto",
-    filter_compact_suv: "SUV",
+    filter_compact_suv: "SUV", // ✅ CHANGED
     filter_7seater: "7 plazas",
 
     services_title: "Servicios",
@@ -282,7 +283,7 @@ const i18n = {
     srv3_title: "Características del auto",
     srv3_1: "A/C en todos los autos",
     srv3_2: "Bluetooth en todos los autos",
-    srv3_3: "Transmisión automática y manual disponible",
+    srv3_3: "Transmisión automática y manual disponible", // ✅ CHANGED
 
     contact_title: "Contacto",
     contact_sub: "Envíanos fechas + auto preferido y confirmamos disponibilidad.",
@@ -303,7 +304,7 @@ const i18n = {
     cur_subline: "Un poco de historia, mucha aventura — y playas que nunca olvidarás.",
     cur_story_badge: "Historia de la isla",
     cur_desc:
-      "Curaçao es mucho más que sol y mar: es una isla donde la historia y la aventura van de la mano. Mucho antes de que el paseo colorido de Willemstad se hiciera famoso, la isla fue moldeada por rutas comerciales, culturas distintas y el Caribe. Hoy todavía se siente ese pasado en las calles de Willemstad: su zona declarada Patrimonio de la Humanidad por la UNESCO, la arquitectura holandesa en tonos pastel, el puente flotante y los murales que llenan la ciudad de vida. Empieza la mañana con un café frente a la Handelskade y luego sigue la carretera costera mientras el paisaje cambia de la ciudad vibrante a una naturaleza más salvaje y abierta.\n\nSi buscas aventura, Curaçao te recompensa en cuanto sales de las rutas principales. Conduce hasta acantilados dramáticos y miradores donde el océano parece infinito; detente en calas escondidas y descubre rincones que no aparecen en todas las guías. Dedica un día a recorrer playas: vive el ambiente de Mambo Beach y luego escápate a la tranquilidad de Playa Lagun. No te pierdas las vistas icónicas de Grote Knip (Playa Kenepa Grandi), y si quieres ese momento ‘wow’ de agua turquesa, Cas Abao es inolvidable. Cuando el sol empieza a caer, la isla se vuelve dorada: perfecta para un paseo al atardecer de regreso a la ciudad.\n\nLo mejor de Curaçao es que todo está cerca, pero cada trayecto se siente como un capítulo nuevo. Con el auto adecuado, tu viaje se vuelve sencillo: más libertad, más playas, más lugares locales y más recuerdos para llevar contigo.",
+      "Curaçao es mucho más que sol y mar: es una isla donde la historia y la aventura van de la mano. Mucho antes de que el paseo colorido de Willemstad se hiciera famoso, la isla fue moldeada por rutas comerciales, culturas distintas y el Caribe. Hoy todavía se siente ese pasado en las calles de Willemstad: su zona declarada Patrimonio de la Humanidad por la UNESCO, la arquitectura holandesa en tonos pastel, el puente flotante y los murales que llenan la ciudad de vida. Empieza la mañana con un café frente a la Handelskade y luego sigue la carretera costera mientras el paisaje cambia de la ciudad vibrante a una naturaleza más salvaje y abierta.\n\nSi buscas aventura, Curaçao te recompensa en cuanto sales de las rutas principales. Conduce hasta acantilados dramáticos y miradores donde el océano parece infinito; detente en calas escondidas y descubre rincones que no aparecen en todas las guías. Dedica un día a recorrer playas: vive el ambiente de Mambo Beach y luego escápate a la tranquilidad de Playa Lagun. No te pierdas las vistas icónicas de Grote Knip (Playa Kenepa Grandi) y, si quieres ese momento ‘wow’ de agua turquesa, Cas Abao es inolvidable. Cuando el sol empieza a caer, la isla se vuelve dorada: perfecta para un paseo al atardecer de regreso a la ciudad.\n\nLo mejor de Curaçao es que todo está cerca, pero cada trayecto se siente como un capítulo nuevo. Con el auto adecuado, tu viaje se vuelve sencillo: más libertad, más playas, más lugares locales y más recuerdos para llevar contigo.",
     cur_beaches_title: "Playas hermosas",
     cur_company_title: "Victory Car Rental",
     cur_company_desc:
@@ -546,58 +547,39 @@ $$(".chip").forEach((btn)=>{
   });
 });
 
-/* Book button scroll + preselect car (Android-safe, no hash-jump interference) */
-/* Book button scroll + preselect car (works on iOS + Android) */
-(function () {
+/* Book button: preselect + ALWAYS scroll to contact (Android safe) */
+document.addEventListener("click", function(e){
+  var t = e.target;
 
-  function handleBookTap(e) {
-
-    var btn = e.target.closest ? e.target.closest("[data-pick]") : null;
-    if (!btn) return;
-
-    if (e.cancelable) e.preventDefault();
-
-    var id = btn.getAttribute("data-pick");
-    if (!id) return;
-
-    if (quickCarSelect) quickCarSelect.value = id;
-    if (contactCarSelect) contactCarSelect.value = id;
-
-    var contactSection = document.getElementById("contact");
-    if (!contactSection) return;
-
-    function doScroll(){
-      var header = document.querySelector(".header");
-      var headerH = header ? header.offsetHeight : 0;
-
-      var y =
-        contactSection.getBoundingClientRect().top +
-        window.pageYOffset -
-        headerH -
-        12;
-
-      window.scrollTo(0, y);
-      try {
-        window.scrollTo({ top: y, behavior: "smooth" });
-      } catch(err){}
-    }
-
-    doScroll();
-    if (window.requestAnimationFrame) requestAnimationFrame(doScroll);
-    setTimeout(doScroll, 60);
-    setTimeout(doScroll, 250);
-
-    setTimeout(function(){
-      if(history.replaceState){
-        history.replaceState(null,"","#contact");
-      }
-    },400);
+  // Walk up to the element that has data-pick (works if a child was tapped)
+  while(t && t !== document && !(t.getAttribute && t.getAttribute("data-pick"))){
+    t = t.parentNode;
   }
+  if(!t || t === document) return;
 
-  document.addEventListener("click", handleBookTap, true);
-  document.addEventListener("touchend", handleBookTap, {capture:true, passive:false});
+  var id = t.getAttribute("data-pick");
+  if(!id) return;
 
-})();
+  // Preselect car in both selects
+  if(quickCarSelect) quickCarSelect.value = id;
+  if(contactCarSelect) contactCarSelect.value = id;
+
+  // Scroll to contact with header offset
+  var contactSection = document.getElementById("contact");
+  if(!contactSection) return;
+
+  var header = document.querySelector(".header");
+  var headerH = header ? header.offsetHeight : 0;
+
+  var y = contactSection.getBoundingClientRect().top + window.pageYOffset - headerH - 12;
+
+  // Instant jump first (most reliable), then smooth (if supported)
+  window.scrollTo(0, y);
+  try { window.scrollTo({ top: y, behavior: "smooth" }); } catch(err){}
+
+  // Retry a couple times (Android layout/paint timing)
+  setTimeout(function(){ window.scrollTo(0, y); }, 60);
+  setTimeout(function(){ window.scrollTo(0, y); }, 250);
 });
 
 /* Mobile menu */
@@ -608,17 +590,15 @@ burger?.addEventListener("click", ()=>{
   burger.setAttribute("aria-expanded", String(open));
 });
 
-/* Close mobile nav when a link is clicked (helps Android tap reliability) */
-if (nav) {
-  nav.addEventListener("click", function (e) {
-    var a = e.target && e.target.closest ? e.target.closest("a") : null;
-    if (!a) return;
-    if (nav.classList.contains("is-open")) {
-      nav.classList.remove("is-open");
-      if (burger) burger.setAttribute("aria-expanded", "false");
-    }
-  });
-}
+/* Close mobile nav after clicking a nav link (prevents weird tap-block feelings) */
+nav?.addEventListener("click", function(e){
+  const a = e.target && e.target.closest ? e.target.closest("a") : null;
+  if(!a) return;
+  if(nav.classList.contains("is-open")){
+    nav.classList.remove("is-open");
+    burger?.setAttribute("aria-expanded", "false");
+  }
+});
 
 /* Language selector */
 const langSelect = $("#langSelect");
@@ -638,6 +618,7 @@ $("#year").textContent = new Date().getFullYear();
 
 /* Init */
 applyI18n(getSavedLang());
+
 
 
 
