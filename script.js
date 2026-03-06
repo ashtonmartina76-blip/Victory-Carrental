@@ -547,44 +547,57 @@ $$(".chip").forEach((btn)=>{
 });
 
 /* Book button scroll + preselect car (Android-safe, no hash-jump interference) */
-document.addEventListener("click", function (e) {
-  var t = e.target;
-  while (t && t !== document && !(t.getAttribute && t.getAttribute("data-pick"))) {
-    t = t.parentNode;
-  }
-  if (!t || t === document) return;
+/* Book button scroll + preselect car (works on iOS + Android) */
+(function () {
 
-  var id = t.getAttribute("data-pick");
-  if (!id) return;
+  function handleBookTap(e) {
 
-  if (quickCarSelect) quickCarSelect.value = id;
-  if (contactCarSelect) contactCarSelect.value = id;
+    var btn = e.target.closest ? e.target.closest("[data-pick]") : null;
+    if (!btn) return;
 
-  var contactSection = document.getElementById("contact");
-  if (!contactSection) return;
+    if (e.cancelable) e.preventDefault();
 
-  function doScroll() {
-    var header = document.querySelector(".header");
-    var headerH = header ? header.offsetHeight : 0;
+    var id = btn.getAttribute("data-pick");
+    if (!id) return;
 
-    var y = contactSection.getBoundingClientRect().top + window.pageYOffset - headerH - 12;
+    if (quickCarSelect) quickCarSelect.value = id;
+    if (contactCarSelect) contactCarSelect.value = id;
 
-    // Force movement (Android reliable), then attempt smooth
-    window.scrollTo(0, y);
-    try { window.scrollTo({ top: y, behavior: "smooth" }); } catch (err) {}
-  }
+    var contactSection = document.getElementById("contact");
+    if (!contactSection) return;
 
-  doScroll();
-  if (window.requestAnimationFrame) requestAnimationFrame(doScroll);
-  setTimeout(doScroll, 60);
-  setTimeout(doScroll, 250);
+    function doScroll(){
+      var header = document.querySelector(".header");
+      var headerH = header ? header.offsetHeight : 0;
 
-  // Update URL without triggering Android hash-jump behavior
-  setTimeout(function () {
-    if (window.history && history.replaceState) {
-      history.replaceState(null, "", "#contact");
+      var y =
+        contactSection.getBoundingClientRect().top +
+        window.pageYOffset -
+        headerH -
+        12;
+
+      window.scrollTo(0, y);
+      try {
+        window.scrollTo({ top: y, behavior: "smooth" });
+      } catch(err){}
     }
-  }, 400);
+
+    doScroll();
+    if (window.requestAnimationFrame) requestAnimationFrame(doScroll);
+    setTimeout(doScroll, 60);
+    setTimeout(doScroll, 250);
+
+    setTimeout(function(){
+      if(history.replaceState){
+        history.replaceState(null,"","#contact");
+      }
+    },400);
+  }
+
+  document.addEventListener("click", handleBookTap, true);
+  document.addEventListener("touchend", handleBookTap, {capture:true, passive:false});
+
+})();
 });
 
 /* Mobile menu */
@@ -625,6 +638,7 @@ $("#year").textContent = new Date().getFullYear();
 
 /* Init */
 applyI18n(getSavedLang());
+
 
 
 
