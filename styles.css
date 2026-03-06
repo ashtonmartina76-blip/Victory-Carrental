@@ -1,433 +1,694 @@
-:root{
-  --bg:#ffffff;
-  --alt:#f6f8f7;
-  --text:#0f1a14;
-  --muted:#5a6b61;
-  --line:rgba(15,26,20,.12);
-  --green:#2aa756;
-  --green2:#3cc36b;
-  --shadow:0 14px 40px rgba(15,26,20,.10);
-  --radius:18px;
+// ===============================
+// Victory Car Rental - script.js
+// WhatsApp OR Email booking option
+// Fix: "Book" in Fleet always scrolls to Contact section on all devices
+// (Android-safe ES5 style; no wording changes)
+// ===============================
+
+var COMPANY_WHATSAPP = "59996913342";
+var COMPANY_EMAIL = "victorycarrental@outlook.com";
+var USD_TO_XCG = 1.79;
+
+// Types: mini | compact | compact_suv | seven_seater
+var cars = [
+  { id:"spark",       name:"Chevrolet Spark",                type:"mini",         price:37, minDays:3, img:"assets/cars/chevrolet-spark.JPG" },
+  { id:"cruze",       name:"Chevrolet Cruze",                type:"compact",      price:43, minDays:3, img:"assets/cars/chevrolet-cruze.JPG" },
+  { id:"versa",       name:"Nissan Versa",                   type:"compact",      price:46, minDays:3, img:"assets/cars/nissan-versa.JPG" },
+  { id:"trax",        name:"Chevrolet Trax",                 type:"compact_suv",  price:51, minDays:3, img:"assets/cars/chevrolet-trax.JPG" },
+  { id:"soul",        name:"Kia Soul",                       type:"compact",      price:51, minDays:3, img:"assets/cars/kia-soul.JPG" },
+  { id:"venue",       name:"Hyundai Venue",                  type:"compact_suv",  price:54, minDays:3, img:"assets/cars/hyundai-venue.JPG" },
+  { id:"trailblazer", name:"Chevrolet Trailblazer",          type:"compact_suv",  price:54, minDays:3, img:"assets/cars/chevrolet-trailblazer.JPG" },
+  { id:"rogue",       name:"Nissan Rogue Sport",             type:"compact_suv",  price:63, minDays:3, img:"assets/cars/Nissan-Rogue-Sport.JPG" },
+  { id:"blazer",      name:"Chevrolet Blazer",               type:"compact_suv",  price:72, minDays:3, img:"assets/cars/chevrolet-blazer.jpg" },
+  { id:"traverse",    name:"Chevrolet Traverse (7 Seater)",  type:"seven_seater", price:83, minDays:3, img:"assets/cars/chevrolet-traverse.JPG" }
+];
+
+function $(sel, parent){
+  if(!parent) parent = document;
+  return parent.querySelector(sel);
+}
+function $$(sel, parent){
+  if(!parent) parent = document;
+  return Array.prototype.slice.call(parent.querySelectorAll(sel));
 }
 
-*{box-sizing:border-box;}
-html,body{height:100%;}
-body{
-  margin:0;
-  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  color:var(--text);
-  background:var(--bg);
+function moneyUSD(n){ return "$" + Number(n).toFixed(0); }
+function moneyXCG(usd){ return "XCG " + (Number(usd) * USD_TO_XCG).toFixed(2); }
+
+var TYPE_LABELS = {
+  mini: "MINI",
+  compact: "COMPACT",
+  compact_suv: "COMPACT SUV",
+  seven_seater: "7 SEATER"
+};
+
+/* =========================
+   i18n
+========================= */
+var i18n = {
+  en: {
+    language: "Language",
+    topbar_location: "Curaçao, Willemstad • Airport pickup & drop-off",
+    brand_tag: "Champ in price & service",
+    nav_fleet: "Fleet",
+    nav_services: "Services",
+    nav_contact: "Contact",
+    nav_book: "Book Now",
+
+    best_prices: "Best prices in town",
+    open_247: "Open 24/7 • No business hours",
+
+    hero_title: "Simple, affordable car rentals in Curaçao",
+    hero_lead:
+      "Daily, weekly & monthly rentals. Free airport pickup & drop-off. Delivery anywhere on the island. No credit card required.",
+    hero_cta1: "View Cars & Prices",
+    hero_cta2: "Get a Quote",
+    badge_airport: "✅ Airport Pickup",
+    badge_delivery: "✅ Delivery Islandwide",
+    badge_insurance: "✅ Insurance Options",
+    fx_note: "Prices shown in USD and XCG (fixed rate: 1 USD = 1.79 XCG).",
+
+    qq_title: "Quick Quote",
+    qq_sub: "Tell us your dates — we’ll confirm availability fast.",
+    pickup_date: "Pickup date",
+    return_date: "Return date",
+    pickup_location: "Pickup location",
+    pickup_placeholder: "Airport / Willemstad / etc.",
+    car_type: "Car type",
+    qq_note: "This is a request — we’ll confirm final price & availability with you.",
+
+    fleet_title: "Our Fleet",
+    fleet_sub: "Starting rates shown below (minimum 3 days).",
+    filter_all: "All",
+    filter_mini: "Mini",
+    filter_compact: "Compact",
+    filter_compact_suv: "SUV",
+    filter_7seater: "7 Seater",
+
+    services_title: "Services",
+    services_sub: "Clear, simple, and convenient.",
+    srv1_title: "Rentals",
+    srv1_1: "Daily, weekly & monthly rentals",
+    srv1_2: "No credit card required",
+    srv1_3: "Insurance options included",
+    srv2_title: "Pickup & Delivery",
+    srv2_1: "Free airport pickup & drop-off",
+    srv2_2: "Delivery anywhere on the island",
+    srv2_3: "Fast and easy process",
+    srv3_title: "Vehicle Features",
+    srv3_1: "A/C in all cars",
+    srv3_2: "Bluetooth in all cars",
+    srv3_3: "Automatic & manual transmission available",
+
+    contact_title: "Contact",
+    contact_sub: "Send your dates + preferred car and we’ll confirm availability.",
+    phone: "Phone",
+    email: "Email",
+    instagram: "Instagram",
+    facebook: "Facebook",
+    call_now: "Call Now",
+    min_days_note: "Minimum 3 days on listed offers.",
+    name: "Name",
+    name_placeholder: "Your name",
+    preferred_car: "Preferred car",
+    message: "Message",
+    message_placeholder: "Airport pickup? Delivery address? Child seat?",
+    rights: "All rights reserved.",
+
+    cur_title: "About Curaçao",
+    cur_subline: "A little history, a lot of adventure — and beaches you’ll never forget.",
+    cur_story_badge: "Island story",
+    cur_desc:
+      "Curaçao is more than a sunny island — it’s a place where history and adventure live side by side. Long before the colorful waterfront of Willemstad became famous, the island was shaped by trade routes, cultures, and the sea. Today you can still feel that story in the UNESCO-listed streets of Willemstad: pastel Dutch architecture, floating bridges, and murals that bring the city to life. Start your morning with coffee by the Handelskade, then follow the road as it curves along the coast and the landscape changes from lively city views to wild, open nature.\n\nIf you’re looking for adventure, Curaçao rewards you the moment you explore beyond the main roads. Drive out to the dramatic cliffs and blowholes, stop at viewpoints where the ocean stretches forever, and take your time discovering hidden coves. Spend a day beach-hopping — feel the energy at Mambo Beach, then escape to calmer water at Playa Lagun. Don’t miss the postcard-perfect views at Grote Knip (Playa Kenepa Grandi), and if you want that turquoise ‘wow’ moment, Cas Abao is unforgettable. And when the sun starts to drop, you’ll find the island turns golden — perfect for a sunset drive back toward town.\n\nThat’s the best part about Curaçao: everything is close, but every drive feels like a new chapter. With the right car, your trip becomes simple — more freedom, more beaches, more local spots, and more memories you’ll want to bring home.",
+    cur_beaches_title: "Beautiful beaches",
+    cur_company_title: "Victory Car Rental",
+    cur_company_desc:
+      "Established since 2009 — helping visitors explore the island with comfort and the best prices in town.",
+    follow_instagram: "Follow us on Instagram",
+
+    footer_name: "Victory Car Rental Lease & Sale",
+    payments_title: "Payment methods accepted",
+
+    from: "From",
+    per_day: "/day",
+    minimum: "Minimum",
+    days: "days",
+    airport_pickup_available: "Airport pickup available",
+    book: "Book",
+    call: "Call",
+
+    send_whatsapp: "Send via WhatsApp",
+    send_email: "Send via Email",
+    booking_note: "No WhatsApp? Use Email — it works without an account."
+  },
+
+  nl: {
+    language: "Taal",
+    topbar_location: "Curaçao, Willemstad • Ophalen & afzetten bij de luchthaven",
+    brand_tag: "Kampioen in prijs & service",
+    nav_fleet: "Auto’s",
+    nav_services: "Service",
+    nav_contact: "Contact",
+    nav_book: "Boek nu",
+
+    best_prices: "Beste prijzen in de stad",
+    open_247: "24/7 open • Geen openingstijden",
+
+    hero_title: "Eenvoudige, betaalbare autoverhuur op Curaçao",
+    hero_lead:
+      "Dagelijks, wekelijks & maandelijks huren. Gratis ophalen & afzetten bij de luchthaven. Levering overal op het eiland. Geen creditcard nodig.",
+    hero_cta1: "Bekijk auto’s & prijzen",
+    hero_cta2: "Offerte aanvragen",
+    badge_airport: "✅ Luchthaven ophalen",
+    badge_delivery: "✅ Levering op het eiland",
+    badge_insurance: "✅ Verzekeringsopties",
+    fx_note: "Prijzen worden weergegeven in USD en XCG (vaste koers: 1 USD = 1.79 XCG).",
+
+    qq_title: "Snelle offerte",
+    qq_sub: "Geef je data door — we bevestigen snel beschikbaarheid.",
+    pickup_date: "Ophaaldatum",
+    return_date: "Inleverdatum",
+    pickup_location: "Ophaallocatie",
+    pickup_placeholder: "Luchthaven / Willemstad / etc.",
+    car_type: "Type auto",
+    qq_note: "Dit is een aanvraag — we bevestigen de definitieve prijs & beschikbaarheid.",
+
+    fleet_title: "Onze vloot",
+    fleet_sub: "Starttarieven hieronder (minimaal 3 dagen).",
+    filter_all: "Alles",
+    filter_mini: "Mini",
+    filter_compact: "Compact",
+    filter_compact_suv: "SUV",
+    filter_7seater: "7-zitter",
+
+    services_title: "Services",
+    services_sub: "Duidelijk, eenvoudig en handig.",
+    srv1_title: "Verhuur",
+    srv1_1: "Dagelijks, wekelijks & maandelijks",
+    srv1_2: "Geen creditcard nodig",
+    srv1_3: "Verzekeringsopties inbegrepen",
+    srv2_title: "Ophalen & bezorgen",
+    srv2_1: "Gratis ophalen & afzetten bij de luchthaven",
+    srv2_2: "Bezorging overal op het eiland",
+    srv2_3: "Snel en eenvoudig",
+    srv3_title: "Auto functies",
+    srv3_1: "Airco in alle auto’s",
+    srv3_2: "Bluetooth in alle auto’s",
+    srv3_3: "Automaat & handgeschakeld beschikbaar",
+
+    contact_title: "Contact",
+    contact_sub: "Stuur je data + gewenste auto — we bevestigen beschikbaarheid.",
+    phone: "Telefoon",
+    email: "E-mail",
+    instagram: "Instagram",
+    facebook: "Facebook",
+    call_now: "Bel nu",
+    min_days_note: "Minimaal 3 dagen op aanbiedingen.",
+    name: "Naam",
+    name_placeholder: "Jouw naam",
+    preferred_car: "Gewenste auto",
+    message: "Bericht",
+    message_placeholder: "Ophalen luchthaven? Bezorgadres? Kinderzitje?",
+    rights: "Alle rechten voorbehouden.",
+
+    cur_title: "Over Curaçao",
+    cur_subline: "Een beetje geschiedenis, veel avontuur — en stranden die je nooit vergeet.",
+    cur_story_badge: "Eilandverhaal",
+    cur_desc:
+      "Curaçao is meer dan alleen zon en strand — het is een eiland waar geschiedenis en avontuur naast elkaar bestaan. Lang voordat de kleurrijke gevels van Willemstad wereldberoemd werden, werd het eiland gevormd door handelsroutes, verschillende culturen en de zee. In de straten van Willemstad voel je dat verleden nog steeds: de UNESCO-werelderfgoedwijk, de pastelgekleurde Nederlandse architectuur, de drijvende pontjesbrug en de muurschilderingen die de stad tot leven brengen. Begin je dag met een koffie bij de Handelskade en volg daarna de kustweg terwijl het uitzicht verandert van levendige stad naar ruige natuur.\n\nWie avontuur zoekt, wordt op Curaçao meteen beloond zodra je verder rijdt dan de bekende plekken. Ontdek kliffen en uitzichtpunten waar de oceaan eindeloos lijkt, stop bij verborgen baaitjes en neem de tijd om het eiland echt te leren kennen. Maak er een beach-hop dag van: geniet van de gezelligheid bij Mambo Beach en rijd daarna naar het rustige, heldere water van Playa Lagun. De iconische ansichtkaart-uitzichten bij Grote Knip (Playa Kenepa Grandi) wil je niet missen, en voor dat echte turquoise ‘wow’-moment is Cas Abao een aanrader. En zodra de zon lager komt te staan, kleurt het eiland goud — ideaal voor een mooie zonsondergangrit terug richting de stad.\n\nDat is het mooie aan Curaçao: alles is dichtbij, maar elke rit voelt als een nieuw avontuur. Met de juiste auto wordt je vakantie eenvoudiger — meer vrijheid, meer stranden, meer lokale plekjes en meer herinneringen om mee naar huis te nemen.",
+    cur_beaches_title: "Mooie stranden",
+    cur_company_title: "Victory Car Rental",
+    cur_company_desc:
+      "Opgericht sinds 2009 — we helpen bezoekers het eiland te verkennen met comfort en de beste prijzen in de stad.",
+    follow_instagram: "Volg ons op Instagram",
+
+    footer_name: "Victory Car Rental Lease & Sale",
+    payments_title: "Betaalmethoden",
+
+    from: "Vanaf",
+    per_day: "/dag",
+    minimum: "Minimum",
+    days: "dagen",
+    airport_pickup_available: "Ophalen luchthaven mogelijk",
+    book: "Boek",
+    call: "Bel",
+
+    send_whatsapp: "Verstuur via WhatsApp",
+    send_email: "Verstuur via e-mail",
+    booking_note: "Geen WhatsApp? Gebruik e-mail — werkt zonder account."
+  },
+
+  es: {
+    language: "Idioma",
+    topbar_location: "Curaçao, Willemstad • Recogida y entrega en el aeropuerto",
+    brand_tag: "Campeón en precio y servicio",
+    nav_fleet: "Autos",
+    nav_services: "Servicios",
+    nav_contact: "Contacto",
+    nav_book: "Reservar",
+
+    best_prices: "Los mejores precios de la ciudad",
+    open_247: "Abierto 24/7 • Sin horario",
+
+    hero_title: "Alquiler de autos fácil y económico en Curaçao",
+    hero_lead:
+      "Alquiler diario, semanal y mensual. Recogida y entrega gratis en el aeropuerto. Entrega en toda la isla. No se requiere tarjeta de crédito.",
+    hero_cta1: "Ver autos y precios",
+    hero_cta2: "Solicitar cotización",
+    badge_airport: "✅ Recogida en aeropuerto",
+    badge_delivery: "✅ Entrega en la isla",
+    badge_insurance: "✅ Opciones de seguro",
+    fx_note: "Precios en USD y XCG (tasa fija: 1 USD = 1.79 XCG).",
+
+    qq_title: "Cotización rápida",
+    qq_sub: "Envíanos tus fechas — confirmamos disponibilidad rápido.",
+    pickup_date: "Fecha de recogida",
+    return_date: "Fecha de devolución",
+    pickup_location: "Lugar de recogida",
+    pickup_placeholder: "Aeropuerto / Willemstad / etc.",
+    car_type: "Tipo de auto",
+    qq_note: "Esto es una solicitud — confirmaremos precio final y disponibilidad.",
+
+    fleet_title: "Nuestra flota",
+    fleet_sub: "Tarifas desde (mínimo 3 días).",
+    filter_all: "Todos",
+    filter_mini: "Mini",
+    filter_compact: "Compacto",
+    filter_compact_suv: "SUV",
+    filter_7seater: "7 plazas",
+
+    services_title: "Servicios",
+    services_sub: "Claro, simple y conveniente.",
+    srv1_title: "Alquiler",
+    srv1_1: "Alquiler diario, semanal y mensual",
+    srv1_2: "No se requiere tarjeta de crédito",
+    srv1_3: "Opciones de seguro incluidas",
+    srv2_title: "Recogida y entrega",
+    srv2_1: "Recogida y entrega gratis en el aeropuerto",
+    srv2_2: "Entrega en cualquier parte de la isla",
+    srv2_3: "Proceso rápido y fácil",
+    srv3_title: "Características del auto",
+    srv3_1: "A/C en todos los autos",
+    srv3_2: "Bluetooth en todos los autos",
+    srv3_3: "Transmisión automática y manual disponible",
+
+    contact_title: "Contacto",
+    contact_sub: "Envíanos fechas + auto preferido y confirmamos disponibilidad.",
+    phone: "Teléfono",
+    email: "Correo",
+    instagram: "Instagram",
+    facebook: "Facebook",
+    call_now: "Llamar",
+    min_days_note: "Mínimo 3 días en ofertas.",
+    name: "Nombre",
+    name_placeholder: "Tu nombre",
+    preferred_car: "Auto preferido",
+    message: "Mensaje",
+    message_placeholder: "¿Recogida en aeropuerto? ¿Dirección de entrega? ¿Asiento de niño?",
+    rights: "Todos los derechos reservados.",
+
+    cur_title: "Sobre Curaçao",
+    cur_subline: "Un poco de historia, mucha aventura — y playas que nunca olvidarás.",
+    cur_story_badge: "Historia de la isla",
+    cur_desc:
+      "Curaçao es mucho más que sol y mar: es una isla donde la historia y la aventura van de la mano. Mucho antes de que el paseo colorido de Willemstad se hiciera famoso, la isla fue moldeada por rutas comerciales, culturas distintas y el Caribe. Hoy todavía se siente ese pasado en las calles de Willemstad: su zona declarada Patrimonio de la Humanidad por la UNESCO, la arquitectura holandesa en tonos pastel, el puente flotante y los murales que llenan la ciudad de vida. Empieza la mañana con un café frente a la Handelskade y luego sigue la carretera costera mientras el paisaje cambia de la ciudad vibrante a una naturaleza más salvaje y abierta.\n\nSi buscas aventura, Curaçao te recompensa en cuanto sales de las rutas principales. Conduce hasta acantilados dramáticos y miradores donde el océano parece infinito; detente en calas escondidas y descubre rincones que no aparecen en todas las guías. Dedica un día a recorrer playas: vive el ambiente de Mambo Beach y luego escápate a la tranquilidad de Playa Lagun. No te pierdas las vistas icónicas de Grote Knip (Playa Kenepa Grandi) y, si quieres ese momento ‘wow’ de agua turquesa, Cas Abao es inolvidable. Cuando el sol empieza a caer, la isla se vuelve dorada: perfecta para un paseo al atardecer de regreso a la ciudad.\n\nLo mejor de Curaçao es que todo está cerca, pero cada trayecto se siente como un capítulo nuevo. Con el auto adecuado, tu viaje se vuelve sencillo: más libertad, más playas, más lugares locales y más recuerdos para llevar contigo.",
+    cur_beaches_title: "Playas hermosas",
+    cur_company_title: "Victory Car Rental",
+    cur_company_desc:
+      "Establecidos desde 2009 — ayudamos a los visitantes a explorar la isla con comodidad y los mejores precios de la ciudad.",
+    follow_instagram: "Síguenos en Instagram",
+
+    footer_name: "Victory Car Rental Lease & Sale",
+    payments_title: "Métodos de pago",
+
+    from: "Desde",
+    per_day: "/día",
+    minimum: "Mínimo",
+    days: "días",
+    airport_pickup_available: "Recogida en aeropuerto disponible",
+    book: "Reservar",
+    call: "Llamar",
+
+    send_whatsapp: "Enviar por WhatsApp",
+    send_email: "Enviar por correo",
+    booking_note: "¿No tienes WhatsApp? Usa el correo — funciona sin cuenta."
+  }
+};
+
+function getSavedLang(){ return localStorage.getItem("vcr_lang") || "en"; }
+function setSavedLang(lang){ localStorage.setItem("vcr_lang", lang); }
+
+function applyI18n(lang){
+  var dict = i18n[lang] || i18n.en;
+
+  var nodes = $$("[data-i18n]");
+  for(var i=0;i<nodes.length;i++){
+    var el = nodes[i];
+    var key = el.getAttribute("data-i18n");
+    if(dict[key]) el.textContent = dict[key];
+  }
+
+  var ph = $$("[data-i18n-placeholder]");
+  for(var j=0;j<ph.length;j++){
+    var el2 = ph[j];
+    var key2 = el2.getAttribute("data-i18n-placeholder");
+    if(dict[key2]) el2.setAttribute("placeholder", dict[key2]);
+  }
+
+  populateSelects(lang);
+  renderFleet(getActiveFilter(), lang);
 }
-a{color:inherit;text-decoration:none;}
-img{max-width:100%;display:block;}
-.container{width:min(1120px,92%);margin-inline:auto;}
 
-.tiny{color:var(--muted);font-size:12px;margin:10px 0 0;line-height:1.4;}
-.tiny--hero{color:rgba(255,255,255,.80);}
-.muted{color:var(--muted);margin:8px 0 0;line-height:1.6;}
-
-/* Topbar */
-.topbar{background:var(--alt);border-bottom:1px solid var(--line);font-size:13px;}
-.topbar__inner{display:flex;align-items:center;justify-content:space-between;padding:10px 0;gap:12px;flex-wrap:wrap;}
-.topbar__left{color:var(--muted);font-weight:700;}
-.topbar__right{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
-.dot{opacity:.5;}
-
-.social{
-  display:inline-flex;align-items:center;gap:8px;padding:6px 10px;
-  border:1px solid var(--line);border-radius:999px;background:#fff;font-weight:800;
-}
-.social svg{width:16px;height:16px;fill:currentColor;}
-.social:hover{box-shadow:0 10px 22px rgba(15,26,20,.08);}
-
-/* Language */
-.lang{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:#fff;}
-.lang__label{font-weight:900;color:var(--muted);font-size:12px;}
-.lang__select{border:none;background:transparent;font-weight:900;cursor:pointer;outline:none;}
-
-/* Header */
-.header{
-  position:sticky;top:0;z-index:50;
-  background:rgba(255,255,255,.90);backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--line);
-}
-.header__inner{display:flex;align-items:center;justify-content:space-between;padding:14px 0;gap:14px;}
-
-/* Brand */
-.brand{display:flex;align-items:center;gap:12px;}
-.brand__logo{width:68px;height:68px;object-fit:contain;background:none;border:none;padding:0;border-radius:0;box-shadow:none;}
-.brand__text{display:flex;flex-direction:column;line-height:1.1;}
-.brand__name{font-weight:900;letter-spacing:.2px;}
-.brand__tag{font-size:12px;color:var(--muted);font-weight:700;margin-top:3px;}
-
-/* Nav */
-.nav{display:flex;align-items:center;gap:16px;}
-.nav a{font-weight:800;font-size:14px;color:var(--muted);}
-.nav a:hover{color:var(--text);}
-
-/* Burger */
-.burger{
-  display:none;width:44px;height:44px;border:1px solid var(--line);
-  border-radius:14px;background:#fff;cursor:pointer;
-}
-.burger span{display:block;width:18px;height:2px;background:var(--text);margin:5px auto;border-radius:2px;}
-
-/* Buttons */
-.btn{
-  border:1px solid var(--line);background:#fff;color:var(--text);
-  padding:11px 14px;border-radius:14px;font-weight:900;font-size:14px;
-  cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  transition:box-shadow .18s ease,transform .06s ease;
-}
-.btn:active{transform:translateY(1px);}
-.btn--primary{border:none;color:#fff;background:linear-gradient(135deg,var(--green),var(--green2));box-shadow:0 10px 26px rgba(42,167,86,.20);}
-.btn--outline{background:#fff;}
-.btn--block{width:100%;}
-
-/* Cards */
-.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;}
-
-/* Forms */
-.form{display:flex;flex-direction:column;gap:12px;margin-top:10px;}
-label{display:flex;flex-direction:column;gap:8px;font-weight:900;font-size:13px;}
-input,select,textarea{
-  border:1px solid rgba(15,26,20,.18);background:#fff;border-radius:14px;padding:12px;font:inherit;
-}
-input:focus,select:focus,textarea:focus{outline:none;border-color:rgba(42,167,86,.55);box-shadow:0 0 0 4px rgba(42,167,86,.12);}
-.grid{display:grid;gap:12px;}
-.grid--2{grid-template-columns:1fr 1fr;}
-
-/* Two-button action row */
-.actions{display:grid;gap:10px;}
-.actions--2{grid-template-columns:1fr 1fr;}
-
-/* Hero */
-.hero{
-  position:relative;background:#111;
-  background-image:url("./assets/curacao-banner.JPG");
-  background-size:cover;background-position:center;
-  padding:54px 0;color:#fff;
-}
-.hero__overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.68),rgba(0,0,0,.35));}
-.hero__inner{position:relative;display:grid;grid-template-columns:1.15fr .85fr;gap:22px;align-items:start;}
-.hero__copy h1{margin:10px 0 0;font-size:clamp(34px,5vw,52px);line-height:1.06;}
-.hero__lead{margin:12px 0 0;color:rgba(255,255,255,.85);line-height:1.65;max-width:60ch;}
-.hero__cta{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap;}
-.hero__badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
-.badge{border:1px solid rgba(255,255,255,.20);background:rgba(255,255,255,.08);padding:8px 10px;border-radius:999px;font-weight:800;font-size:12px;}
-.hero__card{border:2px solid rgba(60,195,107,.30);}
-.hero__headlineTag{
-  display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
-  font-weight:900;font-size:12px;letter-spacing:.3px;background:rgba(42,167,86,.18);
-  border:1px solid rgba(60,195,107,.40);color:#eafff2;
-}
-.hero__openTag{
-  display:inline-flex;align-items:center;padding:8px 12px;border-radius:999px;font-weight:900;font-size:12px;
-  letter-spacing:.2px;margin-top:10px;border:1px solid rgba(255,255,255,.28);
-  background:rgba(255,255,255,.12);color:rgba(255,255,255,.92);
+function getActiveFilter(){
+  var active = document.querySelector(".chip.is-active");
+  return active ? active.getAttribute("data-filter") : "all";
 }
 
-/* Sections */
-.section{padding:52px 0;}
-.section--alt{background:var(--alt);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
-.section__head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap;}
-.section__head h2{margin:0;font-size:28px;}
+/* Rendering */
+var fleetGrid = $("#fleetGrid");
+var quickCarSelect = $("#quickCarSelect");
+var contactCarSelect = $("#contactCarSelect");
 
-/* Filters */
-.filters{display:flex;gap:10px;flex-wrap:wrap;}
-.chip{
-  border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 12px;
-  font-weight:900;font-size:12px;cursor:pointer;
-}
-.chip.is-active{border-color:rgba(42,167,86,.45);background:rgba(42,167,86,.10);}
+function renderFleet(filter, lang){
+  if(!filter) filter = "all";
+  if(!lang) lang = "en";
+  if(!fleetGrid) return;
 
-/* Fleet */
-.fleet{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
-.car{overflow:hidden;padding:0;}
-.car__img{
-  height:170px;background:#fff;border-bottom:1px solid var(--line);
-  display:flex;align-items:center;justify-content:center;padding:10px;
-}
-.car__img img{width:100%;height:100%;object-fit:contain;border-radius:14px;border:0;background:transparent;}
-.car__body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px;}
-.car__top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
-.car__title{font-weight:900;}
-.car__type{margin-top:4px;font-size:12px;color:var(--muted);font-weight:800;}
-.car__pricewrap{text-align:right;white-space:nowrap;}
-.car__price{font-weight:900;}
-.car__xcg{font-weight:800;font-size:12px;color:var(--muted);margin-top:2px;}
-.car__meta{color:var(--muted);font-weight:800;font-size:12px;}
-.car__actions{display:flex;gap:10px;flex-wrap:wrap;}
+  var dict = i18n[lang] || i18n.en;
+  fleetGrid.innerHTML = "";
 
-/* Services */
-.services{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
-.service h3{margin:0 0 8px;}
-.service ul{margin:0;padding-left:18px;color:var(--muted);font-weight:700;line-height:1.7;}
+  var list = (filter === "all") ? cars : cars.filter(function(c){ return c.type === filter; });
 
-/* Contact */
-.contact{display:grid;grid-template-columns:.9fr 1.1fr;gap:14px;align-items:start;}
-.contact__lines{margin-top:12px;display:flex;flex-direction:column;gap:10px;}
-.contact__line{display:flex;justify-content:space-between;gap:12px;padding:12px;border:1px solid var(--line);border-radius:14px;background:#fff;}
-.contact__line span{color:var(--muted);font-weight:900;}
-.contact__line strong{font-weight:900;}
+  for(var i=0;i<list.length;i++){
+    var car = list[i];
+    var xcg = moneyXCG(car.price);
+    var typeLabel = TYPE_LABELS[car.type] || String(car.type).toUpperCase();
 
-/* Curaçao */
-.curacao__header{margin-bottom:14px;}
-.curacao__layout{display:grid;grid-template-columns:1.25fr .75fr;gap:14px;align-items:start;}
-.curacao__side{display:grid;gap:14px;}
+    var el = document.createElement("div");
+    el.className = "card car";
+    el.innerHTML =
+      '<div class="car__img">' +
+        '<img src="' + car.img + '" alt="' + car.name + '" onerror="this.style.display=\'none\'; this.parentElement.textContent=\'Image missing\';" />' +
+      '</div>' +
+      '<div class="car__body">' +
+        '<div class="car__top">' +
+          '<div>' +
+            '<div class="car__title">' + car.name + ' <span class="car__similar">/ Similar</span></div>' +
+            '<div class="car__type">' + typeLabel + '</div>' +
+          '</div>' +
+          '<div class="car__pricewrap">' +
+            '<div class="car__price">' + dict.from + ' ' + moneyUSD(car.price) + dict.per_day + '</div>' +
+            '<div class="car__xcg">' + xcg + dict.per_day + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="car__meta">' +
+          dict.minimum + ' ' + car.minDays + ' ' + dict.days + ' • ' + dict.airport_pickup_available +
+        '</div>' +
+        '<div class="car__actions">' +
+          '<button class="btn btn--primary" type="button" data-pick="' + car.id + '">' + dict.book + '</button>' +
+          '<a class="btn btn--outline" href="tel:+59996913342">' + dict.call + '</a>' +
+        '</div>' +
+      '</div>';
 
-.curacao__story{
-  position:relative;overflow:hidden;padding:0;
-  background-image:url("./assets/curacao-story-bg.jpg");
-  background-size:cover;background-position:center;
-}
-.curacao__storyOverlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(255,255,255,.82));}
-.curacao__storyInner{position:relative;padding:18px 18px 16px;}
-.curacao__storyBadge{
-  display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;
-  font-weight:900;font-size:12px;border:1px solid rgba(15,26,20,.12);
-  background:rgba(255,255,255,.80);color:rgba(15,26,20,.72);margin-bottom:10px;
-}
-.curacao__storyText{
-  margin:0;font-family:"Playfair Display",Georgia,"Times New Roman",serif;
-  font-style:italic;font-size:16px;line-height:1.85;color:rgba(15,26,20,.80);
-  letter-spacing:.1px;white-space:pre-line;
-}
-.curacao__list{margin:10px 0 0;padding-left:18px;color:rgba(15,26,20,.70);font-weight:700;line-height:1.9;}
-
-/* Footer */
-.footer{border-top:1px solid var(--line);padding:18px 0;}
-.footer__inner{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;}
-.footer__links{display:flex;gap:12px;color:var(--muted);font-weight:800;flex-wrap:wrap;}
-.footer__links a:hover{color:var(--text);}
-
-/* Payments (logos) — taller area, no borders, bigger icons */
-.payments{
-  margin-top:32px;
-  padding-top:18px;
-  padding-bottom:18px;
-}
-.payments__title{
-  font-weight:900;
-  font-size:14px;
-  color:rgba(15,26,20,.70);
-  margin-bottom:14px;
-}
-.payments__logos{display:flex;gap:18px;flex-wrap:wrap;align-items:center;}
-.payments__logos img{
-  height:64px;
-  width:auto;
-  padding:0;
-  background:none;
-  border:none;
-  border-radius:0;
-}
-
-/* Responsive */
-@media (max-width:980px){
-  .hero__inner{grid-template-columns:1fr;}
-  .fleet{grid-template-columns:1fr 1fr;}
-  .services{grid-template-columns:1fr;}
-  .contact{grid-template-columns:1fr;}
-  .curacao__layout{grid-template-columns:1fr;}
-  .curacao__storyText{font-size:15.5px;}
-}
-@media (max-width:820px){
-  .burger{display:block;}
-  .nav{
-  position:absolute;top:72px;right:4%;
-  width:min(380px,92%);
-  display:flex;flex-direction:column;align-items:stretch;padding:12px;
-  border:1px solid var(--line);border-radius:18px;background:#fff;box-shadow:var(--shadow);
-
-  z-index:999;                 /* ADD THIS */
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
-
-  transform:translateY(-8px);  /* ADD THIS */
-  transition:opacity .18s ease, transform .18s ease, visibility .18s ease; /* ADD THIS */
-  will-change: transform, opacity;
-}
-
-.nav.is-open{
-  opacity:1;
-  visibility:visible;
-  pointer-events:auto;
-  transform:translateY(0);     /* ADD THIS */
-}
-  .grid--2{grid-template-columns:1fr;}
-  .actions--2{grid-template-columns:1fr;}
-  .brand__logo{width:56px;height:56px;}
-  .social span{display:inline;}
-  .lang__label{display:inline;}
-
-  /* Payments smaller on mobile (still bigger than before) */
-  .payments__logos img{
-    height:52px;
+    fleetGrid.appendChild(el);
   }
 }
 
-/* Rental Policies (Summary) — clean (no border/box) */
-.policy-card{
-  border:none;
-  box-shadow:none;
-  background:transparent;
-  padding:0;
+function populateSelects(lang){
+  if(!lang) lang = "en";
+  var dict = i18n[lang] || i18n.en;
+  var base = '<option value="">' + dict.car_type + '</option>';
+
+  var opts = "";
+  for(var i=0;i<cars.length;i++){
+    var c = cars[i];
+    var xcg = moneyXCG(c.price);
+    opts += '<option value="' + c.id + '">' +
+      c.name + ' / Similar — ' + moneyUSD(c.price) + dict.per_day + ' / ' + xcg + dict.per_day +
+      ' (' + dict.minimum + ' ' + c.minDays + ' ' + dict.days + ')' +
+    '</option>';
+  }
+
+  if(quickCarSelect) quickCarSelect.innerHTML = base + opts;
+  if(contactCarSelect) contactCarSelect.innerHTML = base + opts;
 }
-.policy-list{
-  margin:0;
-  padding-left:18px;
-  color:var(--muted);
-  font-weight:700;
-  line-height:1.9;
+
+/* =========================
+   WhatsApp + Email handlers
+========================= */
+function openWhatsApp(message){
+  var url = "https://wa.me/" + COMPANY_WHATSAPP + "?text=" + encodeURIComponent(message);
+  window.open(url, "_blank");
 }
-.policy-list li{margin-bottom:12px;}
 
-.policy-list strong{color:var(--text);}
-/* =========================================================
-   MOBILE ONLY FIXES (NO WORDS REMOVED / NO WORDS CHANGED)
-   Paste at the very bottom of styles.css
-========================================================= */
+function openEmail(subject, body){
+  var mailto = "mailto:" + COMPANY_EMAIL + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+  window.location.href = mailto;
+}
 
-/* Phones */
-@media (max-width:520px){
-  /* ===== Fix hero card overflow on phones ===== */
+/* Older browsers may not support evt.submitter, so we track it */
+var lastSubmitChannel = "whatsapp";
 
-  /* Make the hero container truly fit the screen */
-  .hero .container{
-    width: min(1120px, 94%);
-  }
-
-  /* Ensure the hero card doesn't exceed the viewport */
-  .hero__card{
-    max-width: 100%;
-  }
-
-  /* Reduce padding a bit so the form fits nicely */
-  .hero__card.card{
-    padding: 14px;
-  }
-
-  /* Make inputs/selects not overflow */
-  input, select, textarea{
-    width: 100%;
-    max-width: 100%;
-  }
-
-  /* Buttons: prevent text clipping */
-  .btn{
-    max-width: 100%;
-    white-space: normal;
-    text-align: center;
-  }
-
-  /* Extra safety: make action row full-width */
-  .actions,
-  .actions--2{
-    width: 100%;
-  }
-  /* Prevent sideways scrolling without clipping content */
-  html, body { overflow-x: hidden; }
-
-  /* Make sure flex/grid children can shrink and wrap (prevents cut-off text) */
-  .topbar__inner,
-  .topbar__right,
-  .header__inner,
-  .brand,
-  .hero__inner,
-  .car__top,
-  .contact__line,
-  .footer__inner,
-  .curacao__layout,
-  .curacao__side{
-    min-width: 0;
-  }
-
-  /* IMPORTANT: never hide words on mobile */
-  .social span{ display: inline; }
-  .lang__label{ display: inline; }
-
-  /* Topbar: allow phone/email to wrap */
-  .topbar__right a{
-    overflow-wrap: anywhere;
-    word-break: break-word;
-  }
-
-  /* Hero: stack into one column */
-  .hero__inner{
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  /* Keep hero card full width */
-  .hero__card{ width: 100%; }
-
-  /* Forms: make 2-col grids become 1-col */
-  .grid--2{ grid-template-columns: 1fr; }
-
-  /* Action buttons stack for easier tapping */
-  .actions--2{ grid-template-columns: 1fr; }
-
-  /* Fleet becomes 1 column */
-  .fleet{ grid-template-columns: 1fr; }
-
-  /* Car header: stack price so it doesn't squeeze text off-screen */
-  .car__top{
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  /* Allow price block to wrap on phones */
-  .car__pricewrap{
-    text-align: left;
-    white-space: normal;
-  }
-
-  /* Car action buttons full width */
-  .car__actions{
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-  .car__actions .btn{ width: 100%; }
-
-  /* Contact: allow long values (email/handles) to wrap */
-  .contact__line{
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  .contact__line strong{
-    overflow-wrap: anywhere;
-    word-break: break-word;
-  }
-
-  /* Mobile dropdown menu stays inside screen */
-  .nav{
-    left: 4%;
-    right: 4%;
-    width: auto;
+function wireSubmitButtons(formEl){
+  if(!formEl) return;
+  var buttons = formEl.querySelectorAll('button[name="channel"]');
+  for(var i=0;i<buttons.length;i++){
+    buttons[i].addEventListener("click", function(){
+      lastSubmitChannel = this.value || "whatsapp";
+    });
   }
 }
 
-/* Small phones */
-@media (max-width:380px){
-  .container{ width: min(1120px,94%); }
-  .btn{ padding: 11px 12px; }
-}
-/* Make visual overlays not block taps (Android fix) */
-.hero__overlay,
-.curacao__storyOverlay{
-  pointer-events: none;
+function getSubmitChannel(evt){
+  // prefer submitter when supported
+  if(evt && evt.submitter && evt.submitter.value){
+    return (evt.submitter.value === "email") ? "email" : "whatsapp";
+  }
+  return (lastSubmitChannel === "email") ? "email" : "whatsapp";
 }
 
-/* Helps Android treat taps as clicks faster/cleaner */
-a, button{
-  touch-action: manipulation;
+function buildQuoteMessage(dict, data, car){
+  var usd = car ? car.price : "";
+  var xcg = car ? (usd * USD_TO_XCG).toFixed(2) : "";
+  var carLine = car ? (car.name + " / Similar") : "";
+  var priceLine = car ? (dict.from + " $" + usd + dict.per_day + " / XCG " + xcg + dict.per_day) : "";
+
+  return (
+    "Hi Victory Car Rental 👋\n\n" +
+    dict.pickup_date + ": " + data.pickup_date + "\n" +
+    dict.return_date + ": " + data.return_date + "\n" +
+    dict.pickup_location + ": " + data.pickup_location + "\n" +
+    dict.car_type + ": " + carLine + "\n\n" +
+    priceLine + "\n\n" +
+    dict.minimum + " 3 " + dict.days + "."
+  ).trim();
 }
-/* Android tap reliability */
-body { -webkit-tap-highlight-color: transparent; }
-a, button { touch-action: manipulation; }
+
+function buildContactMessage(dict, data, car){
+  var usd = car ? car.price : "";
+  var xcg = car ? (usd * USD_TO_XCG).toFixed(2) : "";
+  var carLine = car ? (car.name + " / Similar") : "";
+  var priceLine = car ? (dict.from + " $" + usd + dict.per_day + " / XCG " + xcg + dict.per_day) : "";
+
+  return (
+    "Hi Victory Car Rental 👋\n\n" +
+    dict.name + ": " + data.name + "\n" +
+    dict.phone + ": " + (data.phone || "N/A") + "\n\n" +
+    dict.pickup_date + ": " + data.pickup_date + "\n" +
+    dict.return_date + ": " + data.return_date + "\n" +
+    dict.pickup_location + ": " + data.pickup_location + "\n" +
+    dict.car_type + ": " + carLine + "\n\n" +
+    priceLine + "\n\n" +
+    dict.message + ": " + data.message
+  ).trim();
+}
+
+/* Quick Quote submit */
+var quickForm = $("#quickQuoteForm");
+wireSubmitButtons(quickForm);
+
+if(quickForm){
+  quickForm.addEventListener("submit", function(e){
+    e.preventDefault();
+
+    var lang = getSavedLang();
+    var dict = i18n[lang] || i18n.en;
+    var channel = getSubmitChannel(e);
+
+    var d = new FormData(quickForm);
+    var carId = d.get("car_id");
+    var car = null;
+    for(var i=0;i<cars.length;i++){
+      if(cars[i].id === carId){ car = cars[i]; break; }
+    }
+
+    var payload = {
+      pickup_date: d.get("pickup_date"),
+      return_date: d.get("return_date"),
+      pickup_location: d.get("pickup_location"),
+      car_id: carId
+    };
+
+    var msg = buildQuoteMessage(dict, payload, car);
+
+    if(channel === "email"){
+      openEmail("Victory Car Rental — Quick Quote Request", msg);
+    }else{
+      openWhatsApp(msg);
+    }
+  });
+}
+
+/* Contact submit */
+var contactForm = $("#contactForm");
+wireSubmitButtons(contactForm);
+
+if(contactForm){
+  contactForm.addEventListener("submit", function(e){
+    e.preventDefault();
+
+    var lang = getSavedLang();
+    var dict = i18n[lang] || i18n.en;
+    var channel = getSubmitChannel(e);
+
+    var d = new FormData(contactForm);
+    var carId = d.get("car_id");
+    var car = null;
+    for(var i=0;i<cars.length;i++){
+      if(cars[i].id === carId){ car = cars[i]; break; }
+    }
+
+    var payload = {
+      name: d.get("name"),
+      phone: d.get("phone"),
+      pickup_date: d.get("pickup_date"),
+      return_date: d.get("return_date"),
+      pickup_location: d.get("pickup_location"),
+      car_id: carId,
+      message: d.get("message")
+    };
+
+    var msg = buildContactMessage(dict, payload, car);
+
+    if(channel === "email"){
+      openEmail("Victory Car Rental — Booking Request", msg);
+    }else{
+      openWhatsApp(msg);
+    }
+  });
+}
+
+/* Filter chips */
+var chips = $$(".chip");
+for(var i=0;i<chips.length;i++){
+  (function(btn){
+    btn.addEventListener("click", function(){
+      var all = $$(".chip");
+      for(var k=0;k<all.length;k++){
+        all[k].classList.remove("is-active");
+      }
+      btn.classList.add("is-active");
+      renderFleet(btn.getAttribute("data-filter"), getSavedLang());
+    });
+  })(chips[i]);
+}
+
+/* =========================
+   BOOK button in Fleet
+   Always scroll to Contact section on all devices
+========================= */
+(function(){
+  function handleBook(e){
+    var t = e.target;
+
+    // Find element with data-pick (works if user taps inside button)
+    while(t && t !== document && !(t.getAttribute && t.getAttribute("data-pick"))){
+      t = t.parentNode;
+    }
+    if(!t || t === document) return;
+
+    // prevent weird mobile default behaviors
+    if(e && e.cancelable) e.preventDefault();
+
+    var id = t.getAttribute("data-pick");
+    if(!id) return;
+
+    if(quickCarSelect) quickCarSelect.value = id;
+    if(contactCarSelect) contactCarSelect.value = id;
+
+    var contactSection = document.getElementById("contact");
+    if(!contactSection) return;
+
+    function doScroll(){
+      var header = document.querySelector(".header");
+      var headerH = header ? header.offsetHeight : 0;
+
+      var y = contactSection.getBoundingClientRect().top + window.pageYOffset - headerH - 12;
+
+      // Force move (most reliable), then try smooth
+      window.scrollTo(0, y);
+      try { window.scrollTo({ top: y, behavior: "smooth" }); } catch(err){}
+    }
+
+    doScroll();
+    if(window.requestAnimationFrame) requestAnimationFrame(doScroll);
+    setTimeout(doScroll, 60);
+    setTimeout(doScroll, 250);
+
+    // Update URL without forcing a jump
+    setTimeout(function(){
+      if(window.history && history.replaceState){
+        history.replaceState(null, "", "#contact");
+      }
+    }, 400);
+  }
+
+  document.addEventListener("click", handleBook, true);
+  document.addEventListener("touchend", handleBook, { capture:true, passive:false });
+})();
+
+/* Mobile menu */
+var burger = $("#burger");
+var nav = $("#nav");
+if(burger && nav){
+  burger.addEventListener("click", function(e){
+    if(e && e.cancelable) e.preventDefault();
+    var open = nav.classList.toggle("is-open");
+    burger.setAttribute("aria-expanded", String(open));
+  });
+
+  // Close mobile menu when a link inside it is clicked
+  nav.addEventListener("click", function(e){
+    var t = e.target;
+    while(t && t !== nav && t.tagName !== "A"){
+      t = t.parentNode;
+    }
+    if(t && t.tagName === "A" && nav.classList.contains("is-open")){
+      nav.classList.remove("is-open");
+      burger.setAttribute("aria-expanded", "false");
+    }
+  });
+}
+
+/* Language selector */
+var langSelect = $("#langSelect");
+if(langSelect){
+  var initial = getSavedLang();
+  langSelect.value = initial;
+
+  langSelect.addEventListener("change", function(){
+    var lang = langSelect.value;
+    setSavedLang(lang);
+    applyI18n(lang);
+  });
+}
+
+/* Footer year */
+var yearEl = $("#year");
+if(yearEl) yearEl.textContent = new Date().getFullYear();
+
+/* Init */
+applyI18n(getSavedLang());
 
 
 
