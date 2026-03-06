@@ -270,3 +270,179 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:rgba(42,167,86
 .policy-list li{margin-bottom:12px;}
 
 .policy-list strong{color:var(--text);}
+/* =========================================
+   MOBILE FIXES ONLY
+   Paste at the very bottom of styles.css
+========================================= */
+
+@media (max-width:820px){
+  .burger{display:block;}
+
+  .nav{
+    position:absolute;
+    top:72px;
+    right:4%;
+    width:min(380px,92%);
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    padding:12px;
+    border:1px solid var(--line);
+    border-radius:18px;
+    background:#fff;
+    box-shadow:var(--shadow);
+
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+    transform:translateY(-8px);
+    transition:opacity .18s ease, transform .18s ease, visibility .18s ease;
+    will-change:transform, opacity;
+    z-index:999;
+  }
+
+  .nav.is-open{
+    opacity:1;
+    visibility:visible;
+    pointer-events:auto;
+    transform:translateY(0);
+  }
+
+  .grid--2{grid-template-columns:1fr;}
+  .actions--2{grid-template-columns:1fr;}
+  .brand__logo{width:56px;height:56px;}
+
+  /* keep words visible */
+  .social span{display:inline;}
+  .lang__label{display:inline;}
+
+  .payments__logos img{
+    height:52px;
+  }
+}
+
+@media (max-width:520px){
+  html, body{
+    overflow-x:hidden;
+  }
+
+  .topbar__inner,
+  .topbar__right,
+  .header__inner,
+  .brand,
+  .hero__inner,
+  .car__top,
+  .contact__line,
+  .footer__inner,
+  .curacao__layout,
+  .curacao__side{
+    min-width:0;
+  }
+
+  .topbar__right a,
+  .contact__line strong,
+  .social span,
+  .curacao__storyText{
+    overflow-wrap:anywhere;
+    word-break:break-word;
+  }
+
+  .hero{
+    padding:40px 0;
+  }
+
+  .hero__inner{
+    grid-template-columns:1fr;
+    gap:16px;
+  }
+
+  .hero .container{
+    width:min(1120px,94%);
+  }
+
+  .hero__card{
+    max-width:100%;
+  }
+
+  .hero__card.card{
+    padding:14px;
+  }
+
+  .hero__copy h1{
+    font-size:clamp(30px,9vw,44px);
+  }
+
+  input, select, textarea{
+    width:100%;
+    max-width:100%;
+    font-size:16px;
+  }
+
+  .btn{
+    max-width:100%;
+    white-space:normal;
+    text-align:center;
+  }
+
+  .actions,
+  .actions--2{
+    width:100%;
+  }
+
+  .fleet{
+    grid-template-columns:1fr;
+  }
+
+  .car__top{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .car__pricewrap{
+    text-align:left;
+    white-space:normal;
+  }
+
+  .car__actions{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:10px;
+  }
+
+  .car__actions .btn{
+    width:100%;
+  }
+
+  .contact{
+    grid-template-columns:1fr;
+  }
+
+  .contact__line{
+    flex-wrap:wrap;
+    align-items:center;
+  }
+
+  .section{
+    padding:38px 0;
+  }
+}
+
+@media (max-width:380px){
+  .container{
+    width:min(1120px,94%);
+  }
+
+  .btn{
+    padding:11px 12px;
+  }
+}
+
+/* Android / mobile tap reliability */
+.hero__overlay,
+.curacao__storyOverlay{
+  pointer-events:none;
+}
+
+a, button{
+  touch-action:manipulation;
+}
