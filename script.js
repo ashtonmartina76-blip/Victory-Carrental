@@ -31,8 +31,12 @@ function $$(sel, parent){
   return Array.prototype.slice.call(parent.querySelectorAll(sel));
 }
 
-function moneyUSD(n){ return "$" + Number(n).toFixed(0); }
-function moneyXCG(usd){ return "XCG " + (Number(usd) * USD_TO_XCG).toFixed(2); }
+function moneyUSD(n){
+  return "$" + Number(n).toFixed(0);
+}
+function moneyXCG(usd){
+  return "XCG " + (Number(usd) * USD_TO_XCG).toFixed(2);
+}
 
 var TYPE_LABELS = {
   mini: "MINI",
@@ -590,7 +594,7 @@ for(var i=0;i<chips.length;i++){
   })(chips[i]);
 }
 
-/* Book button in fleet: preselect car + always scroll to contact */
+/* Fleet Book button: select car + always go to Contact */
 document.addEventListener("click", function(e){
   var t = e.target;
 
@@ -610,22 +614,30 @@ document.addEventListener("click", function(e){
   var contactSection = document.getElementById("contact");
   if(!contactSection) return;
 
-  function goToContact(){
-    var header = document.querySelector(".header");
-    var headerH = header ? header.offsetHeight : 0;
-    var y = contactSection.getBoundingClientRect().top + window.pageYOffset - headerH - 12;
-
-    try{
-      window.scrollTo({ top: y, behavior: "smooth" });
-    }catch(err){
-      window.scrollTo(0, y);
+  // reset hash so repeated clicks still work
+  if(window.location.hash === "#contact"){
+    if(window.history && history.replaceState){
+      history.replaceState(null, "", window.location.pathname + window.location.search);
+    }else{
+      window.location.hash = "";
     }
   }
 
-  goToContact();
-  setTimeout(goToContact, 80);
-  setTimeout(goToContact, 220);
+  // jump to contact
+  window.location.hash = "contact";
+
+  function fixScroll(){
+    var header = document.querySelector(".header");
+    var headerH = header ? header.offsetHeight : 0;
+    var y = contactSection.getBoundingClientRect().top + window.pageYOffset - headerH - 12;
+    window.scrollTo(0, y);
+  }
+
+  setTimeout(fixScroll, 0);
+  setTimeout(fixScroll, 80);
+  setTimeout(fixScroll, 220);
 });
+
 /* Mobile menu */
 var burger = $("#burger");
 var nav = $("#nav");
@@ -693,5 +705,3 @@ if(yearEl){
 
 /* Init */
 applyI18n(getSavedLang());
-
-
