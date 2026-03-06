@@ -1,15 +1,14 @@
 // ===============================
 // Victory Car Rental - script.js
 // Adds: WhatsApp OR Email booking option (no WhatsApp account needed for email)
-// Android-safe (ES5-compatible) so buttons work on more Android devices
 // ===============================
 
-var COMPANY_WHATSAPP = "59996913342";
-var COMPANY_EMAIL = "victorycarrental@outlook.com";
-var USD_TO_XCG = 1.79;
+const COMPANY_WHATSAPP = "59996913342";
+const COMPANY_EMAIL = "victorycarrental@outlook.com";
+const USD_TO_XCG = 1.79;
 
 // Types: mini | compact | compact_suv | seven_seater
-var cars = [
+const cars = [
   { id:"spark",       name:"Chevrolet Spark",                type:"mini",         price:37, minDays:3, img:"assets/cars/chevrolet-spark.JPG" },
   { id:"cruze",       name:"Chevrolet Cruze",                type:"compact",      price:43, minDays:3, img:"assets/cars/chevrolet-cruze.JPG" },
   { id:"versa",       name:"Nissan Versa",                   type:"compact",      price:46, minDays:3, img:"assets/cars/nissan-versa.JPG" },
@@ -22,23 +21,13 @@ var cars = [
   { id:"traverse",    name:"Chevrolet Traverse (7 Seater)",  type:"seven_seater", price:83, minDays:3, img:"assets/cars/chevrolet-traverse.JPG" }
 ];
 
-function $(sel, parent){
-  if(!parent) parent = document;
-  return parent.querySelector(sel);
-}
-function $$(sel, parent){
-  if(!parent) parent = document;
-  return Array.prototype.slice.call(parent.querySelectorAll(sel));
-}
+const $ = (sel, parent = document) => parent.querySelector(sel);
+const $$ = (sel, parent = document) => Array.from(parent.querySelectorAll(sel));
 
-function moneyUSD(n){
-  return "$" + Number(n).toFixed(0);
-}
-function moneyXCG(usd){
-  return "XCG " + (Number(usd) * USD_TO_XCG).toFixed(2);
-}
+const moneyUSD = (n) => `$${Number(n).toFixed(0)}`;
+const moneyXCG = (usd) => `XCG ${(Number(usd) * USD_TO_XCG).toFixed(2)}`;
 
-var TYPE_LABELS = {
+const TYPE_LABELS = {
   mini: "MINI",
   compact: "COMPACT",
   compact_suv: "COMPACT SUV",
@@ -48,7 +37,7 @@ var TYPE_LABELS = {
 /* =========================
    i18n
 ========================= */
-var i18n = {
+const i18n = {
   en: {
     language: "Language",
     topbar_location: "Curaçao, Willemstad • Airport pickup & drop-off",
@@ -314,7 +303,7 @@ var i18n = {
     cur_subline: "Un poco de historia, mucha aventura — y playas que nunca olvidarás.",
     cur_story_badge: "Historia de la isla",
     cur_desc:
-      "Curaçao es mucho más que sol y mar: es una isla donde la historia y la aventura van de la mano. Mucho antes de que el paseo colorido de Willemstad se hiciera famoso, la isla fue moldeada por rutas comerciales, culturas distintas y el Caribe. Hoy todavía se siente ese pasado en las calles de Willemstad: su zona declarada Patrimonio de la Humanidad por la UNESCO, la arquitectura holandesa en tonos pastel, el puente flotante y los murales que llenan la ciudad de vida. Empieza la mañana con un café frente a la Handelskade y luego sigue la carretera costera mientras el paisaje cambia de la ciudad vibrante a una naturaleza más salvaje y abierta.\n\nSi buscas aventura, Curaçao te recompensa en cuanto sales de las rutas principales. Conduce hasta acantilados dramáticos y miradores donde el océano parece infinito; detente en calas escondidas y descubre rincones que no aparecen en todas las guías. Dedica un día a recorrer playas: vive el ambiente de Mambo Beach y luego escápate a la tranquilidad de Playa Lagun. No te pierdas las vistas icónicas de Grote Knip (Playa Kenepa Grandi) y, si quieres ese momento ‘wow’ de agua turquesa, Cas Abao es inolvidable. Cuando el sol empieza a caer, la isla se vuelve dorada: perfecta para un paseo al atardecer de regreso a la ciudad.\n\nLo mejor de Curaçao es que todo está cerca, pero cada trayecto se siente como un capítulo nuevo. Con el auto adecuado, tu viaje se vuelve sencillo: más libertad, más playas, más lugares locales y más recuerdos para llevar contigo.",
+      "Curaçao es mucho más que sol y mar: es una isla donde la historia y la aventura van de la mano. Mucho antes de que el paseo colorido de Willemstad se hiciera famoso, la isla fue moldeada por rutas comerciales, culturas distintas y el Caribe. Hoy todavía se siente ese pasado en las calles de Willemstad: su zona declarada Patrimonio de la Humanidad por la UNESCO, la arquitectura holandesa en tonos pastel, el puente flotante y los murales que llenan la ciudad de vida. Empieza la mañana con un café frente a la Handelskade y luego sigue la carretera costera mientras el paisaje cambia de la ciudad vibrante a una naturaleza más salvaje y abierta.\n\nSi buscas aventura, Curaçao te recompensa en cuanto sales de las rutas principales. Conduce hasta acantilados dramáticos y miradores donde el océano parece infinito; detente en calas escondidas y descubre rincones que no aparecen en todas las guías. Dedica un día a recorrer playas: vive el ambiente de Mambo Beach y luego escápate a la tranquilidad de Playa Lagun. No te pierdas las vistas icónicas de Grote Knip (Playa Kenepa Grandi), y si quieres ese momento ‘wow’ de agua turquesa, Cas Abao es inolvidable. Cuando el sol empieza a caer, la isla se vuelve dorada: perfecta para un paseo al atardecer de regreso a la ciudad.\n\nLo mejor de Curaçao es que todo está cerca, pero cada trayecto se siente como un capítulo nuevo. Con el auto adecuado, tu viaje se vuelve sencillo: más libertad, más playas, más lugares locales y más recuerdos para llevar contigo.",
     cur_beaches_title: "Playas hermosas",
     cur_company_title: "Victory Car Rental",
     cur_company_desc:
@@ -338,103 +327,90 @@ var i18n = {
   }
 };
 
-function getSavedLang(){
-  return localStorage.getItem("vcr_lang") || "en";
-}
-function setSavedLang(lang){
-  localStorage.setItem("vcr_lang", lang);
-}
+function getSavedLang(){ return localStorage.getItem("vcr_lang") || "en"; }
+function setSavedLang(lang){ localStorage.setItem("vcr_lang", lang); }
 
 function applyI18n(lang){
-  var dict = i18n[lang] || i18n.en;
+  const dict = i18n[lang] || i18n.en;
 
-  var nodes = $$("[data-i18n]");
-  for(var i=0;i<nodes.length;i++){
-    var el = nodes[i];
-    var key = el.getAttribute("data-i18n");
+  $$("[data-i18n]").forEach((el)=>{
+    const key = el.getAttribute("data-i18n");
     if(dict[key]) el.textContent = dict[key];
-  }
+  });
 
-  var ph = $$("[data-i18n-placeholder]");
-  for(var j=0;j<ph.length;j++){
-    var el2 = ph[j];
-    var key2 = el2.getAttribute("data-i18n-placeholder");
-    if(dict[key2]) el2.setAttribute("placeholder", dict[key2]);
-  }
+  $$("[data-i18n-placeholder]").forEach((el)=>{
+    const key = el.getAttribute("data-i18n-placeholder");
+    if(dict[key]) el.setAttribute("placeholder", dict[key]);
+  });
 
   populateSelects(lang);
   renderFleet(getActiveFilter(), lang);
 }
 
 function getActiveFilter(){
-  var active = document.querySelector(".chip.is-active");
-  return active ? active.getAttribute("data-filter") : "all";
+  const active = document.querySelector(".chip.is-active");
+  return active ? active.dataset.filter : "all";
 }
 
 /* Rendering */
-var fleetGrid = $("#fleetGrid");
-var quickCarSelect = $("#quickCarSelect");
-var contactCarSelect = $("#contactCarSelect");
+const fleetGrid = $("#fleetGrid");
+const quickCarSelect = $("#quickCarSelect");
+const contactCarSelect = $("#contactCarSelect");
 
-function renderFleet(filter, lang){
-  if(!filter) filter = "all";
-  if(!lang) lang = "en";
+function renderFleet(filter="all", lang="en"){
   if(!fleetGrid) return;
-
-  var dict = i18n[lang] || i18n.en;
+  const dict = i18n[lang] || i18n.en;
 
   fleetGrid.innerHTML = "";
-  var list = (filter === "all") ? cars : cars.filter(function(c){ return c.type === filter; });
+  const list = (filter === "all") ? cars : cars.filter(c => c.type === filter);
 
-  for(var i=0;i<list.length;i++){
-    var car = list[i];
-    var xcg = moneyXCG(car.price);
-    var typeLabel = TYPE_LABELS[car.type] || String(car.type).toUpperCase();
+  list.forEach((car)=>{
+    const xcg = moneyXCG(car.price);
+    const typeLabel = TYPE_LABELS[car.type] || car.type.toUpperCase();
 
-    var el = document.createElement("div");
+    const el = document.createElement("div");
     el.className = "card car";
-    el.innerHTML =
-      '<div class="car__img">' +
-        '<img src="' + car.img + '" alt="' + car.name + '" onerror="this.style.display=\'none\'; this.parentElement.textContent=\'Image missing\';" />' +
-      '</div>' +
-      '<div class="car__body">' +
-        '<div class="car__top">' +
-          '<div>' +
-            '<div class="car__title">' + car.name + ' <span class="car__similar">/ Similar</span></div>' +
-            '<div class="car__type">' + typeLabel + '</div>' +
-          '</div>' +
-          '<div class="car__pricewrap">' +
-            '<div class="car__price">' + dict.from + ' ' + moneyUSD(car.price) + dict.per_day + '</div>' +
-            '<div class="car__xcg">' + xcg + dict.per_day + '</div>' +
-          '</div>' +
-        '</div>' +
-        '<div class="car__meta">' +
-          dict.minimum + ' ' + car.minDays + ' ' + dict.days + ' • ' + dict.airport_pickup_available +
-        '</div>' +
-        '<div class="car__actions">' +
-          '<button class="btn btn--primary" data-pick="' + car.id + '">' + dict.book + '</button>' +
-          '<a class="btn btn--outline" href="tel:+59996913342">' + dict.call + '</a>' +
-        '</div>' +
-      '</div>';
+    el.innerHTML = `
+      <div class="car__img">
+        <img src="${car.img}" alt="${car.name}"
+          onerror="this.style.display='none'; this.parentElement.textContent='Image missing';" />
+      </div>
 
+      <div class="car__body">
+        <div class="car__top">
+          <div>
+            <div class="car__title">${car.name} <span class="car__similar">/ Similar</span></div>
+            <div class="car__type">${typeLabel}</div>
+          </div>
+
+          <div class="car__pricewrap">
+            <div class="car__price">${dict.from} ${moneyUSD(car.price)}${dict.per_day}</div>
+            <div class="car__xcg">${xcg}${dict.per_day}</div>
+          </div>
+        </div>
+
+        <div class="car__meta">
+          ${dict.minimum} ${car.minDays} ${dict.days} • ${dict.airport_pickup_available}
+        </div>
+
+        <div class="car__actions">
+          <button class="btn btn--primary" data-pick="${car.id}">${dict.book}</button>
+          <a class="btn btn--outline" href="tel:+59996913342">${dict.call}</a>
+        </div>
+      </div>
+    `;
     fleetGrid.appendChild(el);
-  }
+  });
 }
 
-function populateSelects(lang){
-  if(!lang) lang = "en";
-  var dict = i18n[lang] || i18n.en;
-  var base = '<option value="">' + dict.car_type + '</option>';
+function populateSelects(lang="en"){
+  const dict = i18n[lang] || i18n.en;
+  const base = `<option value="">${dict.car_type}</option>`;
 
-  var opts = "";
-  for(var i=0;i<cars.length;i++){
-    var c = cars[i];
-    var xcg = moneyXCG(c.price);
-    opts += '<option value="' + c.id + '">' +
-      c.name + ' / Similar — ' + moneyUSD(c.price) + dict.per_day + ' / ' + xcg + dict.per_day +
-      ' (' + dict.minimum + ' ' + c.minDays + ' ' + dict.days + ')' +
-    '</option>';
-  }
+  const opts = cars.map((c)=>{
+    const xcg = moneyXCG(c.price);
+    return `<option value="${c.id}">${c.name} / Similar — ${moneyUSD(c.price)}${dict.per_day} / ${xcg}${dict.per_day} (${dict.minimum} ${c.minDays} ${dict.days})</option>`;
+  }).join("");
 
   if(quickCarSelect) quickCarSelect.innerHTML = base + opts;
   if(contactCarSelect) contactCarSelect.innerHTML = base + opts;
@@ -444,159 +420,134 @@ function populateSelects(lang){
    WhatsApp + Email handlers
 ========================= */
 function openWhatsApp(message){
-  var url = "https://wa.me/" + COMPANY_WHATSAPP + "?text=" + encodeURIComponent(message);
+  const url = `https://wa.me/${COMPANY_WHATSAPP}?text=${encodeURIComponent(message)}`;
   window.open(url, "_blank");
 }
 
 function openEmail(subject, body){
-  var mailto = "mailto:" + COMPANY_EMAIL + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+  const mailto = `mailto:${COMPANY_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   window.location.href = mailto;
 }
 
 /**
  * Determine which submit button was pressed.
- * (Older Android browsers may not support evt.submitter — we fall back to whatsapp)
+ * Works because each button has name="channel" value="whatsapp|email"
  */
 function getSubmitChannel(evt){
-  var btn = evt && evt.submitter;
-  var channel = (btn && btn.value) ? btn.value : "whatsapp";
+  const btn = evt?.submitter;
+  const channel = btn?.value || "whatsapp";
   return (channel === "email") ? "email" : "whatsapp";
 }
 
-function buildQuoteMessage(args){
-  var dict = args.dict;
-  var data = args.data;
-  var car = args.car;
-
-  var usd = car ? car.price : "";
-  var xcg = car ? (usd * USD_TO_XCG).toFixed(2) : "";
-  var carLine = car ? (car.name + " / Similar") : "";
-  var priceLine = car ? (dict.from + " $" + usd + dict.per_day + " / XCG " + xcg + dict.per_day) : "";
+function buildQuoteMessage({ dict, data, car }){
+  const usd = car ? car.price : "";
+  const xcg = car ? (usd * USD_TO_XCG).toFixed(2) : "";
+  const carLine = car ? (car.name + " / Similar") : "";
 
   return (
-    "Hi Victory Car Rental 👋\n\n" +
-    dict.pickup_date + ": " + data.pickup_date + "\n" +
-    dict.return_date + ": " + data.return_date + "\n" +
-    dict.pickup_location + ": " + data.pickup_location + "\n" +
-    dict.car_type + ": " + carLine + "\n\n" +
-    priceLine + "\n\n" +
-    dict.minimum + " 3 " + dict.days + "."
+`Hi Victory Car Rental 👋
+
+${dict.pickup_date}: ${data.pickup_date}
+${dict.return_date}: ${data.return_date}
+${dict.pickup_location}: ${data.pickup_location}
+${dict.car_type}: ${carLine}
+
+${car ? `${dict.from} $${usd}${dict.per_day} / XCG ${xcg}${dict.per_day}` : ""}
+
+${dict.minimum} 3 ${dict.days}.`
   ).trim();
 }
 
-function buildContactMessage(args){
-  var dict = args.dict;
-  var data = args.data;
-  var car = args.car;
-
-  var usd = car ? car.price : "";
-  var xcg = car ? (usd * USD_TO_XCG).toFixed(2) : "";
-  var carLine = car ? (car.name + " / Similar") : "";
-  var priceLine = car ? (dict.from + " $" + usd + dict.per_day + " / XCG " + xcg + dict.per_day) : "";
+function buildContactMessage({ dict, data, car }){
+  const usd = car ? car.price : "";
+  const xcg = car ? (usd * USD_TO_XCG).toFixed(2) : "";
+  const carLine = car ? (car.name + " / Similar") : "";
 
   return (
-    "Hi Victory Car Rental 👋\n\n" +
-    dict.name + ": " + data.name + "\n" +
-    dict.phone + ": " + (data.phone || "N/A") + "\n\n" +
-    dict.pickup_date + ": " + data.pickup_date + "\n" +
-    dict.return_date + ": " + data.return_date + "\n" +
-    dict.pickup_location + ": " + data.pickup_location + "\n" +
-    dict.car_type + ": " + carLine + "\n\n" +
-    priceLine + "\n\n" +
-    dict.message + ": " + data.message
+`Hi Victory Car Rental 👋
+
+${dict.name}: ${data.name}
+${dict.phone}: ${data.phone || "N/A"}
+
+${dict.pickup_date}: ${data.pickup_date}
+${dict.return_date}: ${data.return_date}
+${dict.pickup_location}: ${data.pickup_location}
+${dict.car_type}: ${carLine}
+
+${car ? `${dict.from} $${usd}${dict.per_day} / XCG ${xcg}${dict.per_day}` : ""}
+
+${dict.message}: ${data.message}`
   ).trim();
 }
 
 /* Quick Quote submit */
-var quickForm = $("#quickQuoteForm");
-if(quickForm){
-  quickForm.addEventListener("submit", function(e){
-    e.preventDefault();
+$("#quickQuoteForm")?.addEventListener("submit", function(e){
+  e.preventDefault();
 
-    var lang = getSavedLang();
-    var dict = i18n[lang] || i18n.en;
-    var channel = getSubmitChannel(e);
+  const lang = getSavedLang();
+  const dict = i18n[lang] || i18n.en;
+  const channel = getSubmitChannel(e);
 
-    var d = new FormData(quickForm);
-    var carId = d.get("car_id");
-    var car = null;
-    for(var i=0;i<cars.length;i++){
-      if(cars[i].id === carId){ car = cars[i]; break; }
-    }
+  const d = new FormData(this);
+  const car = cars.find(c => c.id === d.get("car_id"));
 
-    var payload = {
-      pickup_date: d.get("pickup_date"),
-      return_date: d.get("return_date"),
-      pickup_location: d.get("pickup_location"),
-      car_id: carId
-    };
+  const payload = {
+    pickup_date: d.get("pickup_date"),
+    return_date: d.get("return_date"),
+    pickup_location: d.get("pickup_location"),
+    car_id: d.get("car_id")
+  };
 
-    var msg = buildQuoteMessage({ dict: dict, data: payload, car: car });
+  const msg = buildQuoteMessage({ dict, data: payload, car });
 
-    if(channel === "email"){
-      openEmail("Victory Car Rental — Quick Quote Request", msg);
-    }else{
-      openWhatsApp(msg);
-    }
-  });
-}
+  if(channel === "email"){
+    openEmail("Victory Car Rental — Quick Quote Request", msg);
+  }else{
+    openWhatsApp(msg);
+  }
+});
 
 /* Contact submit */
-var contactForm = $("#contactForm");
-if(contactForm){
-  contactForm.addEventListener("submit", function(e){
-    e.preventDefault();
+$("#contactForm")?.addEventListener("submit", function(e){
+  e.preventDefault();
 
-    var lang = getSavedLang();
-    var dict = i18n[lang] || i18n.en;
-    var channel = getSubmitChannel(e);
+  const lang = getSavedLang();
+  const dict = i18n[lang] || i18n.en;
+  const channel = getSubmitChannel(e);
 
-    var d = new FormData(contactForm);
-    var carId = d.get("car_id");
-    var car = null;
-    for(var i=0;i<cars.length;i++){
-      if(cars[i].id === carId){ car = cars[i]; break; }
-    }
+  const d = new FormData(this);
+  const car = cars.find(c => c.id === d.get("car_id"));
 
-    var payload = {
-      name: d.get("name"),
-      phone: d.get("phone"),
-      pickup_date: d.get("pickup_date"),
-      return_date: d.get("return_date"),
-      pickup_location: d.get("pickup_location"),
-      car_id: carId,
-      message: d.get("message")
-    };
+  const payload = {
+    name: d.get("name"),
+    phone: d.get("phone"),
+    pickup_date: d.get("pickup_date"),
+    return_date: d.get("return_date"),
+    pickup_location: d.get("pickup_location"),
+    car_id: d.get("car_id"),
+    message: d.get("message")
+  };
 
-    var msg = buildContactMessage({ dict: dict, data: payload, car: car });
+  const msg = buildContactMessage({ dict, data: payload, car });
 
-    if(channel === "email"){
-      openEmail("Victory Car Rental — Booking Request", msg);
-    }else{
-      openWhatsApp(msg);
-    }
-  });
-}
+  if(channel === "email"){
+    openEmail("Victory Car Rental — Booking Request", msg);
+  }else{
+    openWhatsApp(msg);
+  }
+});
 
 /* Filter chips */
-var chips = $$(".chip");
-for(var i=0;i<chips.length;i++){
-  (function(btn){
-    btn.addEventListener("click", function(){
-      var all = $$(".chip");
-      for(var k=0;k<all.length;k++){
-        all[k].classList.remove("is-active");
-      }
-      btn.classList.add("is-active");
-      renderFleet(btn.getAttribute("data-filter"), getSavedLang());
-    });
-  })(chips[i]);
-}
+$$(".chip").forEach((btn)=>{
+  btn.addEventListener("click", ()=>{
+    $$(".chip").forEach(b => b.classList.remove("is-active"));
+    btn.classList.add("is-active");
+    renderFleet(btn.dataset.filter, getSavedLang());
+  });
+});
 
-/* Book button scroll + preselect car (use event delegation) */
-/* Book button scroll + preselect car (Android-safe) */
+/* Book button scroll + preselect car (Android-safe, no hash-jump interference) */
 document.addEventListener("click", function (e) {
-  // Find the element that has data-pick (works even if a child was tapped)
   var t = e.target;
   while (t && t !== document && !(t.getAttribute && t.getAttribute("data-pick"))) {
     t = t.parentNode;
@@ -606,92 +557,75 @@ document.addEventListener("click", function (e) {
   var id = t.getAttribute("data-pick");
   if (!id) return;
 
-  // Preselect car
   if (quickCarSelect) quickCarSelect.value = id;
   if (contactCarSelect) contactCarSelect.value = id;
 
   var contactSection = document.getElementById("contact");
   if (!contactSection) return;
 
-  // Force jump to anchor first (most reliable on Android)
- // Don't trigger hash navigation here (Android can cancel scroll)
-// We'll only update the URL after scrolling succeeds.
-
   function doScroll() {
     var header = document.querySelector(".header");
     var headerH = header ? header.offsetHeight : 0;
 
-    var y =
-      contactSection.getBoundingClientRect().top +
-      window.pageYOffset -
-      headerH -
-      12;
+    var y = contactSection.getBoundingClientRect().top + window.pageYOffset - headerH - 12;
 
-    // Force movement (reliable), then attempt smooth
+    // Force movement (Android reliable), then attempt smooth
     window.scrollTo(0, y);
-    try {
-      window.scrollTo({ top: y, behavior: "smooth" });
-    } catch (err) {}
+    try { window.scrollTo({ top: y, behavior: "smooth" }); } catch (err) {}
   }
 
-  // Run multiple times for Android repaint/layout timing
   doScroll();
   if (window.requestAnimationFrame) requestAnimationFrame(doScroll);
   setTimeout(doScroll, 60);
   setTimeout(doScroll, 250);
-});
 
-  // run multiple times (Android sometimes ignores first scroll)
-  doScroll();
-  setTimeout(doScroll, 60);
-  setTimeout(doScroll, 250);
-
-}
-  
+  // Update URL without triggering Android hash-jump behavior
+  setTimeout(function () {
+    if (window.history && history.replaceState) {
+      history.replaceState(null, "", "#contact");
+    }
+  }, 400);
 });
 
 /* Mobile menu */
-var burger = $("#burger");
-var nav = $("#nav");
-if(burger && nav){
-  burger.addEventListener("click", function(e){
-    e.preventDefault();
-    var open = nav.classList.toggle("is-open");
-    burger.setAttribute("aria-expanded", String(open));
+const burger = $("#burger");
+const nav = $("#nav");
+burger?.addEventListener("click", ()=>{
+  const open = nav.classList.toggle("is-open");
+  burger.setAttribute("aria-expanded", String(open));
+});
+
+/* Close mobile nav when a link is clicked (helps Android tap reliability) */
+if (nav) {
+  nav.addEventListener("click", function (e) {
+    var a = e.target && e.target.closest ? e.target.closest("a") : null;
+    if (!a) return;
+    if (nav.classList.contains("is-open")) {
+      nav.classList.remove("is-open");
+      if (burger) burger.setAttribute("aria-expanded", "false");
+    }
   });
 }
 
 /* Language selector */
-var langSelect = $("#langSelect");
+const langSelect = $("#langSelect");
 if(langSelect){
-  var initial = getSavedLang();
+  const initial = getSavedLang();
   langSelect.value = initial;
 
-  langSelect.addEventListener("change", function(){
-    var lang = langSelect.value;
+  langSelect.addEventListener("change", ()=>{
+    const lang = langSelect.value;
     setSavedLang(lang);
     applyI18n(lang);
   });
 }
 
 /* Footer year */
-var yearEl = $("#year");
-if(yearEl){
-  yearEl.textContent = new Date().getFullYear();
-}
+$("#year").textContent = new Date().getFullYear();
 
 /* Init */
-// Close mobile nav when a link is clicked (prevents tap-block issues)
-if (nav) {
-  nav.addEventListener("click", function(e){
-    var t = e.target;
-    if (t && t.tagName === "A" && nav.classList.contains("is-open")) {
-      nav.classList.remove("is-open");
-      if (burger) burger.setAttribute("aria-expanded", "false");
-    }
-  });
-}
 applyI18n(getSavedLang());
+
 
 
 
